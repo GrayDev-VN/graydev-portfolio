@@ -1,26 +1,86 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f131c;
+    --foreground: #dfe2ef;
+    
+    --surface-lowest: #0a0e17;
+    --surface-low: #181b25;
+    --surface: #0f131c;
+    --surface-card: #131b2c;
+    --surface-high: #262a34;
+    --surface-highest: #31353f;
+    
+    --primary: #9ee939;
+    --primary-container: #84cc16;
+    --primary-glow: rgba(158, 233, 57, 0.35);
+    
+    --secondary: #7bd0ff;
+    --secondary-container: #00a6e0;
+    
+    --tertiary: #fea518;
+    --tertiary-light: #ffcb8d;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-color: #1e293b;
+    --border-hover: #26354d;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--foreground);
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Cyber Effects */
+.cyber-grid {
+  background-image: radial-gradient(rgba(158, 233, 57, 0.08) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.glow-lime {
+  box-shadow: 0 0 24px -4px rgba(158, 233, 57, 0.4);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 24px -4px rgba(123, 208, 255, 0.35);
+}
+
+.glow-subtle {
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.6);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e17;
+}
+::-webkit-scrollbar-thumb {
+  background: #262a34;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #84cc16;
 }
