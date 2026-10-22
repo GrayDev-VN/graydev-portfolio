@@ -45,7 +45,7 @@ export default function Footer() {
 
         {/* Right Verification Status */}
         <div className="font-mono-code text-[11px] text-[#64748b] text-center md:text-right">
-          © {new Date().getFullYear()} Gray Nguyen (GrayDev). Cryptographically Verified Portfolio.
+          © 2025 Gray Nguyen (GrayDev). Cryptographically Verified Portfolio.
         </div>
       </div>
     </footer>

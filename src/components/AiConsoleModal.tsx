@@ -27,7 +27,7 @@ export default function AiConsoleModal({ isOpen, onClose }: AiConsoleModalProps)
     {
       role: "system",
       content: "GrayDev AI Terminal v2.4 initialized. Model: GrayLLM-Inference-Engine (RAG). Ready for queries regarding Gray Nguyen's projects, AI Backend stack, Java Spring Boot architecture, and Deloitte IT Audit experience.",
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: "SYS_READY",
     },
   ]);
   const [input, setInput] = useState("");
