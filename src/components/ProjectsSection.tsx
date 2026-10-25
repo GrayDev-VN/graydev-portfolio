@@ -1,432 +1,378 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  Star, 
-  RefreshCw, 
-  Share2, 
-  ExternalLink, 
-  Code, 
-  ArrowRight, 
-  Layers, 
-  Cpu, 
-  Database, 
-  ShieldCheck, 
-  BarChart3,
-  CheckCircle2
-} from "lucide-react";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
+import { useLocale } from "@/components/LocaleProvider";
 
 export default function ProjectsSection() {
-  const [activeCluster, setActiveCluster] = useState<number | null>(null);
-  const featured = PORTFOLIO_DATA.projects.find((p) => p.isFeatured) || PORTFOLIO_DATA.projects[0];
-  const secondaryProjects = PORTFOLIO_DATA.projects.filter((p) => !p.isFeatured);
+  const { locale, t } = useLocale();
+  const [isDiagramExpanded, setIsDiagramExpanded] = useState(false);
+
+  const featuredProject = PORTFOLIO_DATA.projects.find((p) => p.isFeatured) ?? PORTFOLIO_DATA.projects[0];
+  const otherProjects = PORTFOLIO_DATA.projects.filter((p) => p.id !== featuredProject.id);
+
+  const projectAccents: Record<string, { border: string; glow: string; text: string; bg: string }> = {
+    "goutms": { border: "#06b6d4", glow: "rgba(6, 182, 212, 0.25)", text: "#38bdf8", bg: "rgba(6, 182, 212, 0.08)" },
+    "flowassist-chatbot": { border: "#8b5cf6", glow: "rgba(139, 92, 246, 0.25)", text: "#a78bfa", bg: "rgba(139, 92, 246, 0.08)" },
+    "yhct-knowledge-graph": { border: "#10b981", glow: "rgba(16, 185, 129, 0.25)", text: "#34d399", bg: "rgba(16, 185, 129, 0.08)" },
+    "hadoop-hive-platform": { border: "#f59e0b", glow: "rgba(245, 158, 11, 0.25)", text: "#fbbf24", bg: "rgba(245, 158, 11, 0.08)" },
+  };
 
   return (
     <section id="projects" className="w-full pb-20 relative z-10">
-      {/* Top Technical Breadcrumbs & Section Title */}
-      <div className="w-full pt-8 pb-10">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#262a34] text-[#9ee939] font-mono-code text-xs tracking-wider uppercase font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#9ee939] animate-pulse"></span>
-            PORTFOLIO // CASE_STUDIES
+      {/* Section Header */}
+      <div className="w-full pt-0 pb-10">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#182338] border border-[#334155] text-[#818cf8] font-[JetBrains_Mono] text-[11px] tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+            {t("ENGINEERING PORTFOLIO", "DỰ ÁN KỸ THUẬT")}
           </span>
-          <span className="text-[#8b947d] font-mono-code text-xs">SYS.VER.2025.4</span>
-          <div className="h-px flex-1 bg-[#1e293b] hidden sm:block"></div>
-          <span className="text-[#94a3b8] font-mono-code text-xs uppercase tracking-widest hidden md:inline-block">
-            DATA_SYS // LAKEHOUSE // AUDIT_READY
+          <span className="text-[#64748b] font-[JetBrains_Mono] text-[12px] hidden sm:inline">SYS.CORE // v2.6</span>
+          <div className="h-px flex-1 bg-[#1e293b] hidden sm:block" />
+          <span className="text-[#94a3b8] font-[JetBrains_Mono] text-[10px] uppercase tracking-widest hidden md:inline-block">
+            FINTECH • HEALTHCARE AI • DISTRIBUTED
           </span>
         </div>
 
         <div className="max-w-4xl">
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3">
-            Systems &amp; Technical Case Studies
+          <h2 className="font-[Space_Grotesk] text-[36px] leading-[44px] sm:text-[42px] sm:leading-[50px] font-bold tracking-tight text-white mb-3">
+            {t("Featured Engineering Work", "Dự án Nổi bật & Đang Phát triển")}
           </h2>
-          <p className="text-base sm:text-lg text-[#94a3b8] leading-relaxed">
-            Core systems showcasing practical engineering in enterprise financial data warehousing, high-concurrency e-commerce architecture, Medallion lakehouse pipelines, and LLM optimization.
+          <p className="font-[Plus_Jakarta_Sans] text-[17px] leading-[28px] text-[#94a3b8]">
+            {t(
+              "Practical software engineering across fintech backends, clinical health systems, and applied AI applications.",
+              "Các hệ thống phần mềm thực tế bao gồm backend ngân hàng số, AI hỗ trợ y tế và ứng dụng phân tán hiệu năng cao.",
+            )}
           </p>
         </div>
       </div>
 
-      {/* Featured Project: Vietnamese Banking Analytics (Hero Split Card) */}
-      <div className="w-full bg-[#181b25] border border-[#1e293b] rounded-xl shadow-2xl overflow-hidden hover:border-[#26354d] transition-all duration-300 mb-14">
+      {/* Featured Badge Divider */}
+      <div className="mb-6 flex items-center gap-3">
+        <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 font-[JetBrains_Mono] text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-[14px] text-indigo-400">star</span>
+          {t("FLAGSHIP PROJECT", "DỰ ÁN TRỌNG TÂM")}
+        </span>
+        <span className="h-px flex-1 bg-gradient-to-r from-indigo-500/30 via-slate-800 to-transparent" />
+      </div>
+
+      {/* FEATURED PROJECT: Modern Interactive Architecture Showcase */}
+      <div className="w-full bg-[#0c121f] border border-[#1e293b] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 mb-16 hover:border-indigo-500/40">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-          {/* Left: Interactive High-Fidelity Dashboard Mockup */}
-          <div className="lg:col-span-7 bg-[#0a0e17] p-5 sm:p-7 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-[#1e293b]">
-            <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#9ee939]/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          {/* Left: Interactive Banking Architecture Console (7 cols) */}
+          <div className="lg:col-span-7 bg-[#060911] p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-[#1e293b]">
+            <div className="absolute -top-24 -left-24 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div>
-              {/* Mockup Chrome Header */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-[#1e293b]">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-[#262a34] text-[#9ee939] font-mono-code text-xs font-bold">
-                    <Star className="w-3.5 h-3.5 fill-[#9ee939]" />
-                    FEATURED SYSTEM
-                  </span>
-                  <span className="font-mono-code text-xs text-[#94a3b8] hidden sm:inline">vn-banking-dwh-analytics</span>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs font-mono-code text-[#94a3b8]">
-                  <span className="px-2 py-1 rounded bg-[#181b25] text-white flex items-center gap-1">
-                    <RefreshCw className="w-3 h-3 text-[#9ee939]" /> Auto Sync
-                  </span>
-                  <span className="px-2 py-1 rounded bg-[#181b25] text-[#7bd0ff]">
-                    k=4 Clusters
-                  </span>
-                </div>
+            {/* Console Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-[#1e293b]/70">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping" />
+                <span className="font-[JetBrains_Mono] text-[13px] font-semibold text-white tracking-wide">
+                  BANKING-CORE // AWS-DWH-PIPELINE
+                </span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-[JetBrains_Mono] text-[10px] uppercase font-bold">
+                  {t("ACTIVE SPEC", "ĐANG PHÁT TRIỂN")}
+                </span>
               </div>
 
-              {/* Controls Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-5 font-mono-code text-xs">
-                <div className="bg-[#181b25] border border-[#262a34] px-3 py-2 rounded flex items-center justify-between text-[#dfe2ef]">
-                  <span className="truncate">SOCB / JSCB Banks</span>
-                  <span className="text-[#9ee939]">31</span>
-                </div>
-                <div className="bg-[#181b25] border border-[#262a34] px-3 py-2 rounded flex items-center justify-between text-[#dfe2ef]">
-                  <span className="truncate">Range: 2003-2024</span>
-                  <span className="text-[#7bd0ff]">20 Yrs</span>
-                </div>
-                <div className="bg-[#181b25] border border-[#262a34] px-3 py-2 rounded flex items-center justify-between text-[#dfe2ef]">
-                  <span className="truncate">Model: RF Classifier</span>
-                  <span className="text-[#fea518]">91.4%</span>
-                </div>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsDiagramExpanded(true)}
+                className="px-3 py-1.5 rounded-lg bg-[#101827] hover:bg-[#182338] border border-[#1e293b] text-indigo-400 hover:text-white font-[JetBrains_Mono] text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[15px]">zoom_in</span>
+                <span>{t("Expand Diagram", "Phóng to sơ đồ")}</span>
+              </button>
+            </div>
 
-              {/* Visual Analytics Matrix Area */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Chart 1: K-Means Clustering Plot */}
-                <div className="bg-[#181b25] border border-[#262a34] p-3.5 rounded-lg flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono-code text-xs text-white font-medium">K-Means Scatter Plot</span>
-                    <span className="font-mono-code text-[10px] text-[#9ee939]">Risk Stratification</span>
+            {/* Architecture Visualizer Body */}
+            <div className="flex-1 flex flex-col justify-center my-2">
+              <div className="space-y-4">
+                {/* Architecture Diagram Interactive Container */}
+                <div
+                  onClick={() => setIsDiagramExpanded(true)}
+                  className="group relative rounded-xl overflow-hidden bg-[#0c121f] border border-[#1e293b] hover:border-indigo-500/50 transition-all cursor-pointer shadow-lg"
+                >
+                  <div className="flex items-center justify-between px-3.5 py-2 bg-[#101827] border-b border-[#1e293b] text-[11px] font-[JetBrains_Mono]">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="text-white font-semibold">AWS CLOUD ARCHITECTURE // 1.26M TRANSACTIONS</span>
+                    </div>
+                    <span className="text-indigo-400 group-hover:text-white flex items-center gap-1 font-semibold text-[10px] transition-colors">
+                      <span className="material-symbols-outlined text-[14px]">zoom_in</span>
+                      {t("Click to Expand", "Phóng to")}
+                    </span>
                   </div>
 
-                  {/* SVG Scatter Visual */}
-                  <div className="w-full h-44 relative bg-[#0f131c] border border-[#1e293b] rounded flex items-center justify-center p-2">
-                    <svg className="w-full h-full" fill="none" viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg">
-                      {/* Axis Lines */}
-                      <line stroke="#31353f" strokeWidth="1" x1="24" x2="230" y1="110" y2="110"></line>
-                      <line stroke="#31353f" strokeWidth="1" x1="24" x2="24" y1="10" y2="110"></line>
-                      <line stroke="#262a34" strokeDasharray="2 2" x1="24" x2="230" y1="70" y2="70"></line>
-                      
-                      {/* Grid Labels */}
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="5" y="15">0.08</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="5" y="65">0.04</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="5" y="112">0.00</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="24" y="124">NPL 1%</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="90" y="124">2%</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="160" y="124">3%</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="7" x="210" y="124">5%</text>
-
-                      {/* Cluster 0: Low Risk/Balanced (Lime) */}
-                      <g className="cursor-pointer transition-opacity" onClick={() => setActiveCluster(0)}>
-                        <circle cx="50" cy="92" fill="#9ee939" opacity="0.9" r="4.5"></circle>
-                        <circle cx="62" cy="85" fill="#9ee939" opacity="0.8" r="4"></circle>
-                        <circle cx="78" cy="88" fill="#9ee939" opacity="0.9" r="5"></circle>
-                        <circle cx="95" cy="80" fill="#9ee939" opacity="0.9" r="4.5"></circle>
-                      </g>
-
-                      {/* Cluster 1: High Yield SOCBs (Cyan) */}
-                      <g className="cursor-pointer transition-opacity" onClick={() => setActiveCluster(1)}>
-                        <circle cx="140" cy="74" fill="#7bd0ff" opacity="0.9" r="5"></circle>
-                        <circle cx="155" cy="68" fill="#7bd0ff" opacity="0.85" r="5.5"></circle>
-                        <circle cx="168" cy="72" fill="#7bd0ff" opacity="0.9" r="4"></circle>
-                        <circle cx="185" cy="62" fill="#7bd0ff" opacity="0.95" r="5.5"></circle>
-                      </g>
-
-                      {/* Cluster 2: Stressed NPL Banks (Amber) */}
-                      <g className="cursor-pointer transition-opacity" onClick={() => setActiveCluster(2)}>
-                        <circle cx="45" cy="38" fill="#fea518" opacity="0.95" r="5.5"></circle>
-                        <circle cx="58" cy="45" fill="#fea518" opacity="0.85" r="4.5"></circle>
-                        <circle cx="68" cy="32" fill="#fea518" opacity="0.9" r="5"></circle>
-                        <circle cx="82" cy="52" fill="#fea518" opacity="0.8" r="4"></circle>
-                      </g>
-
-                      {/* Cluster 3: Special/Outliers (Violet) */}
-                      <g className="cursor-pointer transition-opacity" onClick={() => setActiveCluster(3)}>
-                        <circle cx="120" cy="42" fill="#c4b5fd" opacity="0.85" r="4.5"></circle>
-                        <circle cx="198" cy="35" fill="#c4b5fd" opacity="0.9" r="5"></circle>
-                      </g>
-                    </svg>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-2 pt-2 text-[10px] text-[#94a3b8] font-mono-code">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#9ee939]"></span> Cụm 0 (An toàn)</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#7bd0ff]"></span> Cụm 1 (SOCB)</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#fea518]"></span> Cụm 2 (NPL cao)</span>
-                  </div>
-                </div>
-
-                {/* Chart 2: Comparative Cluster Metrics Bar Chart */}
-                <div className="bg-[#181b25] border border-[#262a34] p-3.5 rounded-lg flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono-code text-xs text-white font-medium">Metric Distribution</span>
-                    <div className="flex items-center gap-1 font-mono-code text-[10px] text-[#94a3b8]">
-                      <span className="text-[#7bd0ff]">ROA</span> • <span className="text-[#fea518]">ROE</span> • <span className="text-[#9ee939]">NIM</span>
+                  <div className="relative aspect-[16/9] w-full bg-white/95 overflow-hidden flex items-center justify-center p-2">
+                    <img
+                      src="/banking-architecture.png"
+                      alt="AWS Cloud Banking Data Warehouse & Transaction Analytics Architecture"
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
+                    <div className="absolute inset-0 bg-indigo-950/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                      <span className="px-3 py-1.5 rounded-lg bg-[#0c121f]/90 border border-indigo-500/40 text-white font-[JetBrains_Mono] text-xs font-semibold shadow-xl flex items-center gap-1.5 backdrop-blur-sm">
+                        <span className="material-symbols-outlined text-[16px] text-indigo-400">fullscreen</span>
+                        {t("View High-Res Diagram", "Xem sơ đồ độ phân giải cao")}
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Bar Chart SVG */}
-                  <div className="w-full h-44 relative bg-[#0f131c] border border-[#1e293b] rounded flex items-center justify-center p-2">
-                    <svg className="w-full h-full" fill="none" viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg">
-                      <line stroke="#31353f" strokeWidth="1" x1="20" x2="230" y1="110" y2="110"></line>
-                      <line stroke="#31353f" strokeWidth="1" x1="20" x2="20" y1="15" y2="110"></line>
-
-                      {/* Cluster 1 Group */}
-                      <rect fill="#7bd0ff" height="40" rx="1" width="10" x="36" y="70"></rect>
-                      <rect fill="#fea518" height="58" rx="1" width="10" x="48" y="52"></rect>
-                      <rect fill="#9ee939" height="72" rx="1" width="10" x="60" y="38"></rect>
-
-                      {/* Cluster 2 Group */}
-                      <rect fill="#7bd0ff" height="25" rx="1" width="10" x="88" y="85"></rect>
-                      <rect fill="#fea518" height="36" rx="1" width="10" x="100" y="74"></rect>
-                      <rect fill="#9ee939" height="50" rx="1" width="10" x="112" y="60"></rect>
-
-                      {/* Cluster 3 Group */}
-                      <rect fill="#7bd0ff" height="65" rx="1" width="10" x="140" y="45"></rect>
-                      <rect fill="#fea518" height="78" rx="1" width="10" x="152" y="32"></rect>
-                      <rect fill="#9ee939" height="86" rx="1" width="10" x="164" y="24"></rect>
-
-                      {/* Cluster 4 Group */}
-                      <rect fill="#7bd0ff" height="20" rx="1" width="10" x="192" y="90"></rect>
-                      <rect fill="#fea518" height="26" rx="1" width="10" x="204" y="84"></rect>
-                      <rect fill="#9ee939" height="30" rx="1" width="10" x="216" y="80"></rect>
-
-                      {/* Labels */}
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="8" x="44" y="122">Cụm 1</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="8" x="96" y="122">Cụm 2</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="8" x="148" y="122">Cụm 3</text>
-                      <text fill="#8b947d" fontFamily="monospace" fontSize="8" x="200" y="122">Cụm 4</text>
-                    </svg>
+                {/* 4 Pipeline Milestones based on the diagram */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-[JetBrains_Mono] text-[11px]">
+                  <div className="p-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b]">
+                    <div className="text-amber-400 font-bold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">dataset</span>
+                      <span>1. Ingestion</span>
+                    </div>
+                    <div className="text-[#94a3b8] text-[10px] mt-1">Kaggle CSV (~1.26M) → Amazon S3</div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2 pt-2 font-mono-code text-[10px] text-[#94a3b8]">
-                    <span>Mean ROE: <strong className="text-white">14.82%</strong></span>
-                    <span>NPL Target: <strong className="text-[#9ee939]">&lt; 2.15%</strong></span>
-                    <span>Schema: <strong className="text-[#7bd0ff]">Star</strong></span>
+                  <div className="p-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b]">
+                    <div className="text-amber-400 font-bold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">bolt</span>
+                      <span>2. Lambda ETL</span>
+                    </div>
+                    <div className="text-[#94a3b8] text-[10px] mt-1">Python: clean, warehouse & marts</div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b]">
+                    <div className="text-sky-400 font-bold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">database</span>
+                      <span>3. RDS Postgres</span>
+                    </div>
+                    <div className="text-[#94a3b8] text-[10px] mt-1">Staging → Warehouse → Marts</div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b]">
+                    <div className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">monitoring</span>
+                      <span>4. BI & Alerts</span>
+                    </div>
+                    <div className="text-[#94a3b8] text-[10px] mt-1">EventBridge, SNS & Power BI</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Ingestion Status */}
-            <div className="mt-4 pt-3 flex items-center justify-between text-[#94a3b8] font-mono-code text-[11px] border-t border-[#1e293b]">
-              <span className="flex items-center gap-1.5 text-white">
-                <span className="w-2 h-2 rounded-full bg-[#9ee939]"></span>
-                BigQuery ELT: 28,490 Records Ingested OK
+            {/* Bottom Status telemetry */}
+            <div className="pt-4 mt-2 border-t border-[#1e293b]/70 flex items-center justify-between text-[11px] font-[JetBrains_Mono] text-[#64748b]">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                Target Architecture: Java Spring Boot / Cloud Native
               </span>
-              <span className="text-[#8b947d]">PARTITIONED BY (report_year, bank_code)</span>
+              <span>DOC_ID: BANKING-FINTECH-01</span>
             </div>
           </div>
 
-          {/* Right: Executive Synopsis & System Highlights */}
-          <div className="lg:col-span-5 p-6 sm:p-9 flex flex-col justify-between bg-[#181b25]">
+          {/* Right: Project Details & Action (5 cols) */}
+          <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-[#0c121f]">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-[#9ee939] font-mono-code text-xs uppercase tracking-wider font-bold">
-                  {featured.category}
+                <span className="text-[#818cf8] font-[JetBrains_Mono] text-[11px] uppercase tracking-wider font-semibold">
+                  {locale === "vi" ? featuredProject.categoryVi ?? featuredProject.category : featuredProject.category}
                 </span>
-                <span className="text-[#8b947d]">•</span>
-                <span className="text-[#94a3b8] font-mono-code text-xs">{featured.domain}</span>
+                <span className="text-[#475569]">•</span>
+                <span className="text-[#94a3b8] font-[JetBrains_Mono] text-[12px]">
+                  {locale === "vi" ? featuredProject.domainVi ?? featuredProject.domain : featuredProject.domain}
+                </span>
               </div>
 
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mb-4">
-                {featured.title}
+              <h3 className="font-[Space_Grotesk] text-[24px] sm:text-[28px] leading-[34px] font-bold text-white tracking-tight mb-3">
+                {locale === "vi" ? featuredProject.titleVi ?? featuredProject.title : featuredProject.title}
               </h3>
 
-              <p className="text-sm text-[#94a3b8] mb-6 leading-relaxed">
-                {featured.summary}
+              <p className="font-[Plus_Jakarta_Sans] text-[15px] leading-[25px] text-[#94a3b8] mb-6">
+                {locale === "vi" ? featuredProject.summaryVi ?? featuredProject.summary : featuredProject.summary}
               </p>
 
-              {/* Highlights List */}
-              <div className="space-y-3 mb-6 bg-[#0f131c] border border-[#262a34] p-4 rounded-lg">
-                {featured.highlights.map((h, i) => (
+              {/* Highlights */}
+              <div className="space-y-2.5 mb-6 p-4 rounded-xl bg-[#101827] border border-[#1e293b]">
+                {(locale === "vi" ? featuredProject.highlightsVi ?? featuredProject.highlights : featuredProject.highlights).slice(0, 3).map((h: string, i: number) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#9ee939] shrink-0 mt-0.5" />
-                    <span className="text-xs text-[#dfe2ef] leading-relaxed">{h}</span>
+                    <span className="material-symbols-outlined text-[16px] text-indigo-400 shrink-0 mt-0.5">
+                      check_circle
+                    </span>
+                    <span className="font-[Plus_Jakarta_Sans] text-[13px] text-[#cbd5e1] leading-[20px]">{h}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Tech Stack Badges */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {featured.tags.map((t) => (
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {featuredProject.tags.map((tag) => (
                   <span
-                    key={t}
-                    className="px-2.5 py-1 rounded bg-[#262a34] text-white font-mono-code text-xs"
+                    key={tag}
+                    className="px-2.5 py-1 rounded-md bg-[#141d30] border border-[#1e293b] text-[#cbd5e1] font-[JetBrains_Mono] text-[11px]"
                   >
-                    {t}
+                    {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Bottom Actions */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#1e293b]">
+            {/* Actions */}
+            <div className="pt-5 border-t border-[#1e293b] flex flex-wrap items-center gap-3">
               <a
-                href={featured.demoUrl || "#"}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#9ee939] hover:bg-[#acf847] text-[#0a0e17] font-display text-xs font-bold shadow-[0_0_20px_rgba(158,233,57,0.3)] transition-all"
-              >
-                <span>View Architecture</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-
-              <a
-                href={featured.githubUrl || PORTFOLIO_DATA.profile.github}
+                href={featuredProject.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0f131c] border border-[#262a34] hover:border-[#9ee939] text-white font-mono-code text-xs transition-all"
+                className="flex-1 py-3 px-5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-[Space_Grotesk] text-[14px] font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(99,102,241,0.35)]"
               >
-                <Code className="w-3.5 h-3.5" />
-                <span>Source Code</span>
+                <span>{t("View Source Code", "Xem mã nguồn")}</span>
+                <span className="material-symbols-outlined text-[16px]">north_east</span>
               </a>
-
-              <span className="text-[#64748b] font-mono-code text-[11px] ml-auto">
-                DOC_ID: VN-DWH-01
-              </span>
+              <a
+                href="#contact"
+                className="py-3 px-4 rounded-lg bg-[#101827] hover:bg-[#182338] border border-[#1e293b] text-white font-[JetBrains_Mono] text-[13px] font-medium transition-all"
+              >
+                {t("Discuss Architecture", "Trao đổi kỹ thuật")}
+              </a>
             </div>
           </div>
+
         </div>
       </div>
 
-      {/* Secondary Projects Matrix (3 Columns) */}
-      <div className="w-full">
-        <div className="flex items-center justify-between mb-6">
+      {/* ALL OTHER PROJECTS GRID */}
+      <div>
+        <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="font-display text-xl sm:text-2xl font-bold text-white">
-              Architectural &amp; Research Portfolio
-            </h3>
-            <span className="w-2 h-2 rounded-full bg-[#7bd0ff]"></span>
+            <span className="font-[JetBrains_Mono] text-[12px] uppercase tracking-wider text-[#818cf8] font-bold">
+              {t("MORE ACTIVE & RESEARCH PROJECTS", "CÁC DỰ ÁN NGHIÊN CỨU & ỨNG DỤNG KHÁC")}
+            </span>
+            <span className="px-2 py-0.5 rounded-full bg-[#182338] text-[11px] font-[JetBrains_Mono] text-[#94a3b8]">
+              {otherProjects.length}
+            </span>
           </div>
-          <span className="font-mono-code text-xs text-[#94a3b8] hidden sm:inline">
-            3 ACTIVE SYSTEM DEPLOYMENTS
-          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {secondaryProjects.map((p, idx) => {
-            const isEcom = p.id.includes("ecommerce");
-            const isLakehouse = p.id.includes("minio");
-            const isAI = p.id.includes("llm") || p.id.includes("turboquant");
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {otherProjects.map((p) => {
+            const accent = projectAccents[p.id] ?? {
+              border: "#6366f1",
+              glow: "rgba(99, 102, 241, 0.2)",
+              text: "#818cf8",
+              bg: "rgba(99, 102, 241, 0.08)",
+            };
 
             return (
-              <article
+              <div
                 key={p.id}
-                className="bg-[#181b25] border border-[#1e293b] rounded-xl overflow-hidden hover:border-[#26354d] transition-all duration-300 flex flex-col group"
+                className="group p-6 rounded-2xl bg-[#0c121f] border border-[#1e293b] hover:border-slate-600 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl"
               >
-                {/* Visual Header Banner */}
-                <div className="h-44 bg-[#0a0e17] relative overflow-hidden flex flex-col justify-between p-4 border-b border-[#1e293b]">
-                  <div className="flex items-center justify-between z-10">
+                <div>
+                  {/* Top Bar */}
+                  <div className="flex items-center justify-between gap-2 mb-4">
                     <span
-                      className={`px-2.5 py-0.5 rounded font-mono-code text-[10px] font-bold ${
-                        isEcom
-                          ? "bg-[#fea518]/20 text-[#fea518]"
-                          : isLakehouse
-                          ? "bg-[#7bd0ff]/20 text-[#7bd0ff]"
-                          : "bg-[#9ee939]/20 text-[#9ee939]"
-                      }`}
+                      className="px-2.5 py-1 rounded-md font-[JetBrains_Mono] text-[11px] font-bold uppercase tracking-wider"
+                      style={{ color: accent.text, backgroundColor: accent.bg }}
                     >
-                      {p.category}
+                      {locale === "vi" ? p.categoryVi ?? p.category : p.category}
                     </span>
-                    <span className="text-[10px] font-mono-code text-[#64748b]">
-                      PROD_SYS // {idx + 1}
+                    <span className="text-[#64748b] font-[JetBrains_Mono] text-[11px]">
+                      {(locale === "vi" ? p.domainVi ?? p.domain : p.domain).split("•")[0]?.trim()}
                     </span>
                   </div>
 
-                  {/* Icon representation */}
-                  <div className="flex items-center justify-center my-auto">
-                    <div
-                      className={`w-14 h-14 rounded-xl flex items-center justify-center border ${
-                        isEcom
-                          ? "bg-[#fea518]/10 border-[#fea518]/30 text-[#fea518]"
-                          : isLakehouse
-                          ? "bg-[#7bd0ff]/10 border-[#7bd0ff]/30 text-[#7bd0ff]"
-                          : "bg-[#9ee939]/10 border-[#9ee939]/30 text-[#9ee939]"
-                      }`}
-                    >
-                      {isEcom ? (
-                        <Layers className="w-7 h-7" />
-                      ) : isLakehouse ? (
-                        <Database className="w-7 h-7" />
-                      ) : (
-                        <Cpu className="w-7 h-7" />
-                      )}
-                    </div>
-                  </div>
+                  {/* Title */}
+                  <h3 className="font-[Space_Grotesk] text-[20px] font-bold text-white mb-2.5 group-hover:text-indigo-300 transition-colors">
+                    {locale === "vi" ? p.titleVi ?? p.title : p.title}
+                  </h3>
 
-                  <div className="z-10 font-mono-code text-[10px] text-[#94a3b8]">
-                    {p.domain}
-                  </div>
-                </div>
+                  {/* Summary */}
+                  <p className="font-[Plus_Jakarta_Sans] text-[14px] leading-[22px] text-[#94a3b8] mb-5 line-clamp-3">
+                    {locale === "vi" ? p.summaryVi ?? p.summary : p.summary}
+                  </p>
 
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-display text-lg font-bold text-white group-hover:text-[#9ee939] transition-colors mb-2.5">
-                      {p.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#94a3b8] mb-4 leading-relaxed">
-                      {p.summary}
-                    </p>
-                  </div>
-
-                  <div>
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      {p.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 rounded bg-[#0f131c] border border-[#262a34] text-[#dfe2ef] font-mono-code text-[11px]"
-                        >
-                          {tag}
+                  {/* Highlights Bullet */}
+                  <div className="mb-5 space-y-2">
+                    {(locale === "vi" ? p.highlightsVi ?? p.highlights : p.highlights).slice(0, 2).map((hl: string, hidx: number) => (
+                      <div key={hidx} className="flex items-start gap-2 text-[12px] text-[#cbd5e1] font-[Plus_Jakarta_Sans]">
+                        <span className="material-symbols-outlined text-[14px] mt-0.5 shrink-0" style={{ color: accent.text }}>
+                          arrow_right
                         </span>
-                      ))}
-                    </div>
-
-                    {/* Links */}
-                    <div className="flex items-center justify-between pt-3 border-t border-[#1e293b] font-mono-code text-xs">
-                      <a
-                        href={p.demoUrl || "#"}
-                        className="text-[#9ee939] hover:underline inline-flex items-center gap-1 font-semibold"
-                      >
-                        <span>Architecture Specs</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </a>
-                      <a
-                        href={p.githubUrl || PORTFOLIO_DATA.profile.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[#94a3b8] hover:text-white"
-                        aria-label="View Source Code"
-                      >
-                        <Code className="w-4 h-4" />
-                      </a>
-                    </div>
+                        <span className="line-clamp-2">{hl}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </article>
+
+                <div>
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-[#1e293b] mb-4">
+                    {p.tags.slice(0, 5).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 rounded bg-[#101827] border border-[#1e293b] text-[#94a3b8] font-[JetBrains_Mono] text-[10px]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action Link */}
+                  <a
+                    href={p.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 font-[JetBrains_Mono] text-[12px] font-semibold text-[#818cf8] hover:text-white transition-colors"
+                  >
+                    <span>{t("Repository Details", "Chi tiết dự án")}</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </a>
+                </div>
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* Systems Telemetry Bar at Base */}
-      <div className="w-full mt-14 pt-6 border-t border-[#1e293b] flex flex-wrap items-center justify-between gap-4 text-[#94a3b8] font-mono-code text-xs">
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="flex items-center gap-1.5 text-white">
-            <span className="w-2 h-2 rounded-full bg-[#9ee939] animate-ping"></span>
-            ALL PIPELINES OPERATIONAL
-          </span>
-          <span>STORAGE ENGINE: MINIO + GOOGLE BIGQUERY</span>
-          <span className="hidden md:inline">AUDIT COMPLIANCE: SOC2 / ITGC READY</span>
+      {/* Lightbox Fullscreen Architecture Modal */}
+      {isDiagramExpanded && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md transition-all"
+          onClick={() => setIsDiagramExpanded(false)}
+        >
+          <div
+            className="relative max-w-6xl w-full max-h-[92vh] bg-[#0c121f] border border-[#1e293b] rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#1e293b]">
+              <div>
+                <h4 className="font-[Space_Grotesk] text-lg sm:text-xl font-bold text-white">
+                  {t(
+                    "AWS Cloud Banking Data Warehouse & Transaction Analytics Architecture",
+                    "Kiến trúc Kho Dữ liệu & Phân tích Giao dịch Ngân hàng trên AWS Cloud",
+                  )}
+                </h4>
+                <p className="font-[JetBrains_Mono] text-xs text-[#94a3b8] mt-1">
+                  Kaggle (~1.26M Tx) • Amazon S3 • AWS Lambda (Python ETL) • Amazon RDS PostgreSQL (Staging / Warehouse / Marts) • Power BI
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsDiagramExpanded(false)}
+                className="w-9 h-9 rounded-xl bg-[#101827] border border-[#1e293b] text-[#94a3b8] hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-auto rounded-xl bg-white p-2 sm:p-4 flex items-center justify-center">
+              <img
+                src="/banking-architecture.png"
+                alt="AWS Cloud Banking Data Warehouse Architecture"
+                className="max-w-full max-h-[75vh] object-contain shadow-sm"
+              />
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[#64748b]">ENCRYPTED TELEMETRY STREAM</span>
-          <span className="px-2 py-0.5 rounded bg-[#262a34] text-[#9ee939] font-mono-code text-[11px]">
-            0.024s LATENCY
-          </span>
-        </div>
-      </div>
+      )}
     </section>
   );
 }

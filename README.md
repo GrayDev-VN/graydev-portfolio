@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gray Nguyen Portfolio
 
-## Getting Started
+Personal portfolio built with Next.js App Router. The site includes a bilingual EN/VN interface, a contact form delivered by Resend, and a Markdown-based blog.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create `.env.local` from `.env.example` and configure the Resend variables before testing contact form delivery.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contact email setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The contact form uses a server-side Next.js route and Resend. It does not store submissions in a database.
 
-## Learn More
+1. Create a Resend account and verify a domain you control.
+2. Create an API key and set `RESEND_API_KEY`.
+3. Set `CONTACT_TO_EMAIL` to the inbox that should receive messages.
+4. Set `CONTACT_FROM_EMAIL` to a sender address on the verified domain, for example `Gray Nguyen <portfolio@yourdomain.com>`.
+5. Add all three variables to the Vercel project settings for Preview and Production, then redeploy.
 
-To learn more about Next.js, take a look at the following resources:
+Never expose `RESEND_API_KEY` as a `NEXT_PUBLIC_` variable or commit it to Git. Without these settings, the form reports that delivery is not configured instead of claiming a message was sent.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Blog authoring
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Blog posts live in [`content/blog/`](./content/blog/) as Markdown files with front matter. Copy [`content/blog/_template.md`](./content/blog/_template.md), fill in the English and Vietnamese fields, and add the Markdown body. Commit and push the new file to publish it.
 
-## Deploy on Vercel
+No database or in-site admin login is used. Only people with permission to merge or deploy changes to this repository can publish posts; readers can only view the public blog.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploying
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Import the GitHub repository into Vercel and add the Resend environment variables above. Vercel Hobby is generally free for personal, non-commercial projects; check Vercel's current plan terms for your use case. Vercel can automatically build and deploy each push, so GitHub Actions are optional (they can still run checks).
+
+The app is configured for a Next.js server deployment rather than static export because the contact form needs a server-side API route.

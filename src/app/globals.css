@@ -2,31 +2,31 @@
 
 @layer base {
   :root {
-    --background: #0f131c;
-    --foreground: #dfe2ef;
+    --background: #070a13;
+    --foreground: #f8fafc;
     
-    --surface-lowest: #0a0e17;
-    --surface-low: #181b25;
-    --surface: #0f131c;
-    --surface-card: #131b2c;
-    --surface-high: #262a34;
-    --surface-highest: #31353f;
+    --surface-lowest: #04060c;
+    --surface-low: #0a0f1d;
+    --surface: #070a13;
+    --surface-card: #0e1526;
+    --surface-high: #152038;
+    --surface-highest: #1e2c4a;
     
-    --primary: #9ee939;
-    --primary-container: #84cc16;
-    --primary-glow: rgba(158, 233, 57, 0.35);
+    --primary: #818cf8;
+    --primary-container: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.28);
     
-    --secondary: #7bd0ff;
-    --secondary-container: #00a6e0;
+    --secondary: #38bdf8;
+    --secondary-container: #0284c7;
     
-    --tertiary: #fea518;
-    --tertiary-light: #ffcb8d;
+    --tertiary: #a78bfa;
+    --tertiary-light: #c4b5fd;
     
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     --border-color: #1e293b;
-    --border-hover: #26354d;
+    --border-hover: #334155;
   }
 
   html {
@@ -37,33 +37,58 @@
   }
 
   body {
-    background-color: var(--background);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 600px),
+      radial-gradient(circle at 80% 12%, rgba(56, 189, 248, 0.08) 0%, transparent 500px),
+      radial-gradient(circle at 50% 45%, rgba(99, 102, 241, 0.03) 0%, transparent 700px),
+      var(--background);
     color: var(--foreground);
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+  }
+
+  section,
+  #rtic {
+    scroll-margin-top: 6rem;
   }
 }
 
 /* Custom Cyber Effects */
 .cyber-grid {
-  background-image: radial-gradient(rgba(158, 233, 57, 0.08) 1px, transparent 0);
-  background-size: 32px 32px;
+  background-image:
+    radial-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px, 64px 64px;
 }
 
-.font-display {
-  font-family: 'Space Grotesk', sans-serif;
+/* Clean standard ampersand fallback to fix Space Grotesk '&' glyph */
+@font-face {
+  font-family: 'CleanAmpersand';
+  src: local('Segoe UI'), local('Inter'), local('Helvetica Neue'), local('Arial'), local('sans-serif');
+  unicode-range: U+0026;
+  font-weight: 100 900;
 }
 
-.font-mono-code {
-  font-family: 'JetBrains Mono', monospace;
+.font-display,
+[class*="font-[Space_Grotesk]"] {
+  font-family: 'CleanAmpersand', var(--font-space-grotesk), var(--font-plus-jakarta-sans), system-ui, sans-serif !important;
+}
+
+.font-mono-code,
+[class*="font-[JetBrains_Mono]"] {
+  font-family: var(--font-jetbrains-mono), monospace !important;
+}
+
+[class*="font-[Plus_Jakarta_Sans]"] {
+  font-family: var(--font-plus-jakarta-sans), system-ui, sans-serif !important;
 }
 
 .glow-lime {
-  box-shadow: 0 0 24px -4px rgba(158, 233, 57, 0.4);
+  box-shadow: 0 0 24px -4px rgba(167, 139, 250, 0.4);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 24px -4px rgba(123, 208, 255, 0.35);
+  box-shadow: 0 0 24px -4px rgba(196, 181, 253, 0.35);
 }
 
 .glow-subtle {
@@ -75,12 +100,55 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0e17;
+  background: #080510;
 }
 ::-webkit-scrollbar-thumb {
-  background: #262a34;
+  background: #241a32;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #84cc16;
+  background: #8b5cf6;
+}
+
+/* Infinite Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 36s linear infinite;
+}
+
+.marquee-container:hover .animate-marquee,
+.marquee-container:hover .animate-marquee-slow,
+.marquee-container:hover .animate-marquee-reverse {
+  animation-play-state: paused;
 }

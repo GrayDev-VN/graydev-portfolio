@@ -16,17 +16,17 @@ interface Message {
 }
 
 const PRESET_QUERIES = [
-  "Tóm tắt kinh nghiệm và thế mạnh của Gray Nguyen?",
+  "Tóm tắt kinh nghiệm của Gray Nguyen?",
   "Kiến trúc BigQuery Banking DWH hoạt động ra sao?",
-  "Gray định hướng kết hợp AI Backend và Java Spring Boot như thế nào?",
-  "Kinh nghiệm IT Audit tại Deloitte Vietnam có gì nổi bật?",
+  "Gray đã làm AI Teaching Assistant ở đâu?",
+  "Gray có những kinh nghiệm AWS và AI Developer nào?",
 ];
 
 export default function AiConsoleModal({ isOpen, onClose }: AiConsoleModalProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
-      content: "GrayDev AI Terminal v2.4 initialized. Model: GrayLLM-Inference-Engine (RAG). Ready for queries regarding Gray Nguyen's projects, AI Backend stack, Java Spring Boot architecture, and Deloitte IT Audit experience.",
+      content: "GrayDev AI Terminal v2.4 initialized. Ready for queries about Gray Nguyen's AI Teaching Assistant, AWS Intern, and SOFTWORLD AI Developer experience.",
       timestamp: "SYS_READY",
     },
   ]);
@@ -55,14 +55,12 @@ export default function AiConsoleModal({ isOpen, onClose }: AiConsoleModalProps)
     const q = query.toLowerCase();
 
     if (q.includes("tóm tắt") || q.includes("kinh nghiệm") || q.includes("gray nguyen") || q.includes("thế mạnh")) {
-      return `### Hồ Sơ & Thế Mạnh của Gray Nguyen (GrayDev):
-- **Vị trí & Mục tiêu:** AI Backend Engineer & Distributed Systems Engineer.
-- **Học vấn:** Sinh viên chuyên ngành Data Engineering tại HCM-UTE (GPA: 8.41).
-- **Kinh nghiệm thực chiến:**
-  1. **Deloitte Vietnam (Audit & Assurance):** Đánh giá ITGC (User Access, Change Management, ITIL), SOX 404, dùng SQL phân tích dữ liệu kiểm toán hệ thống ngân hàng.
-  2. **Freelance System Planner & BA:** Thiết kế 14 BRDs, 32 UML Flowcharts, kiến trúc ERD chuẩn 3NF và API contracts.
-  3. **Giảng viên phòng Lab ĐH:** Đào tạo 120+ sinh viên về tối ưu truy vấn SQL, PostgreSQL, Python pipelines.
-- **Điểm mạnh cốt lõi:** Kết hợp tư duy hệ thống chặt chẽ (IT Audit / Governance) với kỹ năng lập trình AI Backend (Python/LLM) và hệ thống doanh nghiệp (Java Spring Boot).`;
+      return `### Hồ sơ & Kinh nghiệm của Gray Nguyen (Nguyên Đức Toàn):
+- AI Teaching Assistant.
+- AWS Intern.
+- AI Developer tại SOFTWORLD.
+
+Các mốc thời gian và mô tả công việc chi tiết chưa được cung cấp.`;
     }
 
     if (q.includes("bigquery") || q.includes("banking") || q.includes("dwh") || q.includes("ngân hàng")) {
@@ -75,32 +73,26 @@ export default function AiConsoleModal({ isOpen, onClose }: AiConsoleModalProps)
   - Thuật toán Random Forest đạt độ chính xác **91.4%** trong dự báo cảnh báo sớm áp lực thanh khoản.`;
     }
 
+    if (q.includes("assistant") || q.includes("teaching") || q.includes("trợ giảng")) {
+      return "Gray Nguyen (Nguyên Đức Toàn) có kinh nghiệm làm AI Teaching Assistant. Thông tin về đơn vị và thời gian chưa được cung cấp.";
+    }
+
+    if (q.includes("aws") || q.includes("softworld") || q.includes("developer")) {
+      return "Gray Nguyen (Nguyên Đức Toàn) từng làm AWS Intern và hiện có kinh nghiệm AI Developer tại SOFTWORLD. Thông tin chi tiết về nhiệm vụ và thời gian chưa được cung cấp.";
+    }
+
     if (q.includes("spring boot") || q.includes("java") || q.includes("ai backend") || q.includes("kết hợp")) {
-      return `### Chiến Lược Kết Hợp AI Backend & Java Spring Boot:
-- **Tầng Doanh Nghiệp (Java Spring Boot):** 
-  - Đảm nhận Gateway, Auth (OAuth2 / JWT), Rate Limiting, Audit Logging (ITGC compliant).
-  - Xử lý các nghiệp vụ nghiệp vụ nặng về concurrency, giao dịch ACID và tích hợp cơ sở dữ liệu quan hệ (PostgreSQL).
-- **Tầng AI Service (Python FastAPI / PyTorch / vLLM):**
-  - Chuyên phục vụ suy luận mô hình AI (Model Serving), RAG pipeline, và cache nén KV (TurboQuant).
-  - Giao tiếp với Spring Boot thông qua gRPC hoặc RESTful Streaming để đạt độ trễ thấp nhất.
-- **Giao diện (Next.js):** 
-  - Đóng vai trò Client tiêu thụ API từ cả hai service, render tĩnh siêu nhanh và tương thích hoàn hảo khi deploy trên GitHub Pages / Vercel.`;
+      return "Các thông tin hiện có chỉ xác nhận kinh nghiệm AI Teaching Assistant, AWS Intern và AI Developer tại SOFTWORLD; chưa có chi tiết về Java hoặc AI backend.";
     }
 
     if (q.includes("deloitte") || q.includes("itgc") || q.includes("audit") || q.includes("kiểm toán")) {
-      return `### Kinh Nghiệm IT Audit tại Deloitte Vietnam:
-- **Khối ngành:** Audit & Assurance, phục vụ danh mục khách hàng Ngân hàng & Tài chính hàng đầu.
-- **Nhiệm vụ chính:**
-  - Kiểm tra IT General Controls (ITGC): Quản lý phân quyền truy cập (Logical Access), quy trình thay đổi mã nguồn/phát hành (Change Management ITIL), và vận hành sao lưu (IT Operations).
-  - Phân tích và kiểm thử Application Controls trên các hệ thống Core Banking.
-  - Viết câu lệnh SQL substantive audit trên tập dữ liệu hàng triệu giao dịch ngân hàng để bảo đảm tính toàn vẹn (Completeness & Accuracy).`;
+      return "Kinh nghiệm đã xác nhận của Gray Nguyen là AI Teaching Assistant, AWS Intern và AI Developer tại SOFTWORLD. Hiện chưa có thông tin về IT Audit.";
     }
 
-    return `Cảm ơn bạn đã hỏi! Gray Nguyen (GrayDev) chuyên sâu về:
-1. **AI Backend & LLM Inference:** Tối ưu hóa bộ nhớ GPU, RAG, PyTorch, FastAPI.
-2. **Java Spring Boot:** Xây dựng Microservices chịu tải cao, chuẩn kiến trúc sạch.
-3. **Big Data & DWH:** Google BigQuery, Apache Spark, MinIO Medallion Lakehouse.
-4. **ITGC & Audit:** Đảm bảo hệ thống đạt chuẩn kiểm soát nội bộ và an ninh dữ liệu.
+    return `Cảm ơn bạn đã hỏi! Kinh nghiệm đã xác nhận của Gray Nguyen (Nguyên Đức Toàn) gồm:
+1. **AI Teaching Assistant**
+2. **AWS Intern**
+3. **AI Developer tại SOFTWORLD**
 
 Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nhắn liên hệ trực tiếp cho Gray qua email: \`${PORTFOLIO_DATA.profile.email}\`!`;
   };
@@ -143,26 +135,26 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="w-full max-w-3xl bg-[#0a0e17] border border-[#1e293b] rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col h-[620px] overflow-hidden relative">
+      <div className="w-full max-w-3xl bg-[#080510] border border-[#30233f] rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col h-[620px] overflow-hidden relative">
         {/* Modal Terminal Header */}
-        <div className="px-5 py-3.5 bg-[#181b25] border-b border-[#1e293b] flex items-center justify-between">
+        <div className="px-5 py-3.5 bg-[#110d1c] border-b border-[#30233f] flex items-center justify-between">
           <div className="flex items-center gap-2 font-mono-code text-xs text-white">
-            <Bot className="w-4 h-4 text-[#9ee939]" />
+            <Bot className="w-4 h-4 text-[#a78bfa]" />
             <span className="font-bold">GrayDev AI Console</span>
-            <span className="text-[#64748b]">[LLM-Inference-Engine // v2.4]</span>
+            <span className="text-[#766b8e]">[LLM-Inference-Engine // v2.4]</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleReset}
-              className="p-1.5 rounded bg-[#0f131c] border border-[#262a34] text-[#94a3b8] hover:text-white"
+              className="p-1.5 rounded bg-[#0b0814] border border-[#241a32] text-[#b5aec7] hover:text-white"
               title="Reset Session"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded bg-[#0f131c] border border-[#262a34] text-[#94a3b8] hover:text-white"
+              className="p-1.5 rounded bg-[#0b0814] border border-[#241a32] text-[#b5aec7] hover:text-white"
               title="Close Terminal"
             >
               <X className="w-4 h-4" />
@@ -179,12 +171,12 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
                 m.role === "user"
                   ? "items-end"
                   : m.role === "system"
-                  ? "items-start text-[#64748b]"
-                  : "items-start text-[#dfe2ef]"
+                  ? "items-start text-[#766b8e]"
+                  : "items-start text-[#f1edfa]"
               }`}
             >
-              <div className="flex items-center gap-2 text-[10px] text-[#64748b]">
-                <span className="uppercase font-bold text-[#9ee939]">
+              <div className="flex items-center gap-2 text-[10px] text-[#766b8e]">
+                <span className="uppercase font-bold text-[#a78bfa]">
                   {m.role === "user" ? "USER" : m.role === "system" ? "KERNEL" : "GRAYDEV-AI"}
                 </span>
                 <span>{m.timestamp}</span>
@@ -193,10 +185,10 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
               <div
                 className={`p-3.5 rounded-lg max-w-[90%] whitespace-pre-wrap leading-relaxed ${
                   m.role === "user"
-                    ? "bg-[#1e293b] text-white border border-[#31353f]"
+                    ? "bg-[#30233f] text-white border border-[#30233f]"
                     : m.role === "system"
-                    ? "bg-[#0f131c] text-[#8b947d] border border-[#1e293b] w-full"
-                    : "bg-[#131b2c] text-[#dfe2ef] border border-[#26354d]"
+                    ? "bg-[#0b0814] text-[#938aa6] border border-[#30233f] w-full"
+                    : "bg-[#171026] text-[#f1edfa] border border-[#352a45]"
                 }`}
               >
                 {m.content}
@@ -205,8 +197,8 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
           ))}
 
           {isTyping && (
-            <div className="flex items-center gap-2 text-[#9ee939] font-mono-code text-xs">
-              <span className="w-2 h-2 rounded-full bg-[#9ee939] animate-ping"></span>
+            <div className="flex items-center gap-2 text-[#a78bfa] font-mono-code text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#a78bfa] animate-ping"></span>
               <span>Evaluating query vector &amp; streaming response...</span>
             </div>
           )}
@@ -215,12 +207,12 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
         </div>
 
         {/* Preset Prompt Buttons */}
-        <div className="px-4 py-2.5 bg-[#0f131c] border-t border-[#1e293b] flex gap-2 overflow-x-auto text-[11px] font-mono-code">
+        <div className="px-4 py-2.5 bg-[#0b0814] border-t border-[#30233f] flex gap-2 overflow-x-auto text-[11px] font-mono-code">
           {PRESET_QUERIES.map((preset, i) => (
             <button
               key={i}
               onClick={() => handleSend(preset)}
-              className="px-3 py-1 rounded bg-[#181b25] border border-[#262a34] text-[#94a3b8] hover:text-[#9ee939] hover:border-[#9ee939]/40 whitespace-nowrap transition-all shrink-0"
+              className="px-3 py-1 rounded bg-[#110d1c] border border-[#241a32] text-[#b5aec7] hover:text-[#a78bfa] hover:border-[#a78bfa]/40 whitespace-nowrap transition-all shrink-0"
             >
               {preset}
             </button>
@@ -233,19 +225,19 @@ Bạn có thể thử các câu hỏi gợi ý bên dưới hoặc gửi tin nh�
             e.preventDefault();
             handleSend();
           }}
-          className="p-3 bg-[#181b25] border-t border-[#1e293b] flex items-center gap-2"
+          className="p-3 bg-[#110d1c] border-t border-[#30233f] flex items-center gap-2"
         >
-          <span className="text-[#9ee939] font-mono-code font-bold pl-2">&gt;</span>
+          <span className="text-[#a78bfa] font-mono-code font-bold pl-2">&gt;</span>
           <input
             type="text"
             placeholder="Type query or command for GrayDev AI..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 px-3 py-2 bg-transparent text-white font-mono-code text-xs focus:outline-none placeholder:text-[#64748b]"
+            className="flex-1 px-3 py-2 bg-transparent text-white font-mono-code text-xs focus:outline-none placeholder:text-[#766b8e]"
           />
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-[#9ee939] hover:bg-[#acf847] text-[#0a0e17] font-mono-code text-xs font-bold flex items-center gap-1.5 transition-all"
+            className="px-4 py-2 rounded-lg bg-[#a78bfa] hover:bg-[#c4b5fd] text-[#080510] font-mono-code text-xs font-bold flex items-center gap-1.5 transition-all"
           >
             <span>SEND</span>
             <CornerDownLeft className="w-3.5 h-3.5" />

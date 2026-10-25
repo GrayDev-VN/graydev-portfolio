@@ -1,155 +1,139 @@
 "use client";
 
-import React, { useState } from "react";
-import { 
-  Code, 
-  Terminal, 
-  ShieldCheck, 
-  Mail, 
-  Menu, 
-  X, 
-  Bot, 
-  CheckCircle2,
-  Sparkles
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { Github, Linkedin } from "@/components/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
+import { useLocale } from "@/components/LocaleProvider";
 
 interface NavbarProps {
-  onOpenAiConsole: () => void;
+  activeSection?: string;
 }
 
-export default function Navbar({ onOpenAiConsole }: NavbarProps) {
+const navLinks = [
+  { label: "ABOUT", labelVi: "GIỚI THIỆU", href: "/#about", section: "about" },
+  { label: "CAREER", labelVi: "SỰ NGHIỆP", href: "/#career", section: "career" },
+  { label: "PROJECTS", labelVi: "DỰ ÁN", href: "/#projects", section: "projects" },
+  { label: "BLOG", labelVi: "BLOG", href: "/blog", section: "blog" },
+  { label: "CREDENTIALS", labelVi: "CHỨNG CHỈ", href: "/#credentials", section: "credentials" },
+  { label: "CONTACT", labelVi: "LIÊN HỆ", href: "/#contact", section: "contact" },
+];
+
+export default function Navbar({ activeSection }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { locale, toggleLocale, t } = useLocale();
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(PORTFOLIO_DATA.profile.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const navLinks = [
-    { label: "ABOUT", href: "#about" },
-    { label: "CAREER", href: "#career" },
-    { label: "PROJECTS", href: "#projects" },
-    { label: "CREDENTIALS", href: "#credentials" },
-    { label: "CONTACT", href: "#contact" },
-  ];
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-[#0a0e17]/85 backdrop-blur-xl border-b border-[#1e293b] shadow-[0_1px_16px_rgba(0,0,0,0.6)]">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all border-b ${
+        scrolled
+          ? "bg-[#080c15]/95 backdrop-blur-xl border-[#1e293b] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+          : "bg-[#080c15]/85 backdrop-blur-xl border-transparent"
+      }`}
+    >
       <div className="h-20 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#about" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-lg bg-[#181b25] border border-[#262a34] flex items-center justify-center text-[#9ee939] group-hover:border-[#9ee939] transition-colors">
-            <Terminal className="w-5 h-5" />
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="font-display text-xl font-extrabold tracking-tight text-white">
-              Gray<span className="text-[#9ee939]">Dev</span>
-            </span>
-            <span className="w-2 h-2 rounded-full bg-[#9ee939] shadow-[0_0_10px_#9ee939] animate-pulse"></span>
-          </div>
-        </a>
+        <Link href="/" className="flex items-center gap-1.5 group">
+          <span className="font-[Space_Grotesk] text-[22px] sm:text-[24px] leading-tight font-extrabold tracking-tight text-white">
+            {PORTFOLIO_DATA.profile.name}
+          </span>
+          <span className="h-2 w-2 rounded-full bg-indigo-400 shadow-[0_0_12px_rgba(129,140,248,0.8)] group-hover:scale-125 transition-transform" />
+        </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#181b25]/70 border border-[#1e293b] backdrop-blur-md">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="px-3.5 py-1.5 font-mono-code text-xs font-semibold tracking-wider text-[#94a3b8] hover:text-[#9ee939] hover:bg-[#262a34]/60 transition-all rounded-lg"
-            >
-              {link.label}
-            </a>
-          ))}
-          <button
-            onClick={onOpenAiConsole}
-            className="ml-2 px-3 py-1.5 rounded-lg bg-[#9ee939]/10 border border-[#9ee939]/40 text-[#9ee939] font-mono-code text-xs font-bold tracking-wider hover:bg-[#9ee939] hover:text-[#0a0e17] transition-all flex items-center gap-1.5"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI CONSOLE</span>
-          </button>
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0c121f]/90 border border-[#1e293b] backdrop-blur-md">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.section;
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`px-3.5 py-1.5 font-[JetBrains_Mono] text-[12px] tracking-wider uppercase transition-all rounded-lg ${
+                  isActive
+                    ? "bg-indigo-600 text-white font-bold shadow-[0_0_12px_rgba(99,102,241,0.4)]"
+                    : "text-[#94a3b8] hover:text-white hover:bg-[#141d30]"
+                }`}
+              >
+                {t(link.label, link.labelVi)}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Quick Social & Action Cluster */}
-        <div className="flex items-center gap-3">
+        {/* Right cluster */}
+        <div className="flex items-center gap-2.5">
           <div className="hidden sm:flex items-center gap-1.5">
-            <a
+            <Link
               href={PORTFOLIO_DATA.profile.github}
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub Profile"
-              className="w-9 h-9 rounded-lg bg-[#181b25] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#9ee939] hover:border-[#9ee939] hover:bg-[#262a34] transition-all"
+              className="w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#141d30] transition-all"
             >
-              <Code className="w-4 h-4" />
-            </a>
+              <Github aria-hidden="true" size={17} />
+            </Link>
             <a
               href={PORTFOLIO_DATA.profile.linkedin}
               target="_blank"
               rel="noreferrer"
               aria-label="LinkedIn Profile"
-              className="w-9 h-9 rounded-lg bg-[#181b25] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#7bd0ff] hover:border-[#7bd0ff] hover:bg-[#262a34] transition-all"
+              className="w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#141d30] transition-all"
             >
-              <Terminal className="w-4 h-4" />
+              <Linkedin aria-hidden="true" size={17} />
             </a>
+          </div>
+
+          <div className="h-4 w-px bg-[#1e293b] hidden sm:block mx-1" />
+
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleCopyEmail}
-              aria-label="Copy Email"
-              title="Copy Email"
-              className="w-9 h-9 rounded-lg bg-[#181b25] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#9ee939] hover:border-[#9ee939] hover:bg-[#262a34] transition-all"
+              type="button"
+              onClick={toggleLocale}
+              aria-label={t("Switch to Vietnamese", "Chuyển sang tiếng Anh")}
+              className="px-2.5 py-1.5 rounded-lg bg-[#0c121f] border border-[#1e293b] text-[#cbd5e1] hover:text-white hover:border-indigo-500/50 hover:bg-[#141d30] text-[11px] font-[JetBrains_Mono] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer"
             >
-              {copied ? <CheckCircle2 className="w-4 h-4 text-[#9ee939]" /> : <Mail className="w-4 h-4" />}
+              <span className="material-symbols-outlined text-[15px] text-indigo-400">language</span>
+              <span>{locale.toUpperCase()}</span>
             </button>
           </div>
 
-          <div className="h-5 w-px bg-[#262a34] hidden sm:block mx-1"></div>
-
-          {/* AI Backend Ready Status Badge */}
-          <button
-            onClick={onOpenAiConsole}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#181b25] border border-[#1e293b] hover:border-[#9ee939] transition-all group"
-          >
-            <div className="w-2 h-2 rounded-full bg-[#9ee939] animate-ping"></div>
-            <span className="font-mono-code text-[11px] text-[#9ee939] font-bold tracking-wide">
-              AI READY
-            </span>
-          </button>
-
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-9 h-9 rounded-lg bg-[#181b25] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white"
-            aria-label="Toggle Navigation Menu"
+            className="lg:hidden w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white cursor-pointer"
+            aria-label="Toggle Menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <span className="material-symbols-outlined text-[20px]">
+              {mobileMenuOpen ? "close" : "menu"}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0a0e17] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-3">
+        <div className="lg:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-2.5 rounded-lg bg-[#181b25] text-sm font-mono-code font-semibold tracking-wider text-[#dfe2ef] hover:text-[#9ee939] hover:bg-[#262a34]"
+              className={`px-4 py-2.5 rounded-lg text-sm font-[JetBrains_Mono] font-semibold tracking-wider transition-colors ${
+                activeSection === link.section
+                  ? "bg-indigo-600 text-white font-bold"
+                  : "bg-[#0c121f] text-white hover:text-indigo-300 hover:bg-[#141d30]"
+              }`}
             >
-              {link.label}
-            </a>
+              {t(link.label, link.labelVi)}
+            </Link>
           ))}
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenAiConsole();
-            }}
-            className="px-4 py-2.5 rounded-lg bg-[#9ee939] text-[#0a0e17] text-sm font-mono-code font-bold tracking-wider flex items-center justify-center gap-2"
-          >
-            <Bot className="w-4 h-4" />
-            <span>LAUNCH AI CONSOLE</span>
-          </button>
         </div>
       )}
     </header>

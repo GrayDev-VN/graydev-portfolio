@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import React from "react";
+import { LocaleProvider } from "@/components/LocaleProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -10,25 +12,31 @@ const spaceGrotesk = Space_Grotesk({
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Gray Nguyen (GrayDev) | AI Backend & Distributed Systems Engineer",
-  description: "Portfolio of Gray Nguyen (GrayDev) - AI Backend Engineer specializing in LLM serving, data pipelines, enterprise ITGC controls, and Java Spring Boot architectures.",
-  keywords: ["GrayDev", "Gray Nguyen", "AI Backend", "Java Spring Boot", "Data Engineering", "IT Audit", "Deloitte Vietnam", "FastAPI", "BigQuery"],
-  authors: [{ name: "Gray Nguyen (GrayDev)" }],
+  title: "Gray Nguyen | AI & Backend Engineer",
+  description: "Gray Nguyen (Nguyễn Đức Toàn) — AI Developer at SOFTWORLD, AWS Intern, and AI Teaching Assistant.",
+  keywords: ["Gray Nguyen", "Nguyễn Đức Toàn", "AI Developer", "Backend Engineer", "AI Teaching Assistant", "AWS Intern", "SOFTWORLD"],
+  authors: [{ name: "Gray Nguyen" }],
+  icons: {
+    icon: "/avatar.jpg",
+    shortcut: "/avatar.jpg",
+    apple: "/avatar.jpg",
+  },
   openGraph: {
-    title: "Gray Nguyen (GrayDev) | AI Backend & Distributed Systems Engineer",
-    description: "Cyber-audit technical portfolio of Gray Nguyen: AI Backend, Data Pipelines, and Enterprise Architectures.",
+    title: "Gray Nguyen | AI & Backend Engineer",
+    description: "AI Developer at SOFTWORLD, AWS Intern, and AI Teaching Assistant.",
     type: "website",
+    images: [{ url: "/avatar.jpg" }],
   },
 };
 
@@ -41,13 +49,20 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} scroll-smooth dark`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body 
-        className="min-h-screen bg-[#0f131c] text-[#dfe2ef] antialiased selection:bg-[#84cc16] selection:text-[#0a0e17]"
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className="min-h-screen bg-[#0b0814] text-[#f1edfa] antialiased selection:bg-[#8b5cf6] selection:text-[#1b1230]"
         suppressHydrationWarning
       >
-        {children}
+        <LocaleProvider>{children}</LocaleProvider>
       </body>
     </html>
   );
