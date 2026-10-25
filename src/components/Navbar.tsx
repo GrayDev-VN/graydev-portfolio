@@ -48,20 +48,26 @@ export default function Navbar({ activeSection }: NavbarProps) {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0c121f]/90 border border-[#1e293b] backdrop-blur-md">
+        <nav className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#0c121f]/90 border border-[#1e293b] backdrop-blur-md">
           {navLinks.map((link) => {
             const isActive = activeSection === link.section;
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`px-3.5 py-1.5 font-[JetBrains_Mono] text-[12px] tracking-wider uppercase transition-all rounded-lg ${
+                className={`relative px-3.5 py-2 font-[JetBrains_Mono] text-[12px] tracking-wider uppercase transition-colors flex flex-col items-center justify-center group ${
                   isActive
-                    ? "bg-indigo-600 text-white font-bold shadow-[0_0_12px_rgba(99,102,241,0.4)]"
-                    : "text-[#94a3b8] hover:text-white hover:bg-[#141d30]"
+                    ? "text-white font-bold"
+                    : "text-[#94a3b8] hover:text-white"
                 }`}
               >
-                {t(link.label, link.labelVi)}
+                <span>{t(link.label, link.labelVi)}</span>
+                {/* Active Underline Indicator */}
+                {isActive ? (
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] rounded-full bg-gradient-to-r from-indigo-500 via-sky-400 to-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
+                ) : (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full bg-indigo-400/40 opacity-0 group-hover:w-3/5 group-hover:opacity-100 transition-all duration-200" />
+                )}
               </Link>
             );
           })}
@@ -136,20 +142,26 @@ export default function Navbar({ activeSection }: NavbarProps) {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`px-4 py-2.5 rounded-lg text-sm font-[JetBrains_Mono] font-semibold tracking-wider transition-colors ${
-                activeSection === link.section
-                  ? "bg-indigo-600 text-white font-bold"
-                  : "bg-[#0c121f] text-white hover:text-indigo-300 hover:bg-[#141d30]"
-              }`}
-            >
-              {t(link.label, link.labelVi)}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.section;
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-[JetBrains_Mono] font-semibold tracking-wider transition-colors border-b ${
+                  isActive
+                    ? "text-white font-bold border-indigo-500 bg-indigo-500/5 shadow-[inset_0_-2px_0_0_#6366f1]"
+                    : "text-[#94a3b8] border-transparent hover:text-white hover:bg-[#0c121f]"
+                }`}
+              >
+                <span>{t(link.label, link.labelVi)}</span>
+                {isActive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.9)]" />
+                )}
+              </Link>
+            );
+          })}
 
           {/* Mobile Social Links */}
           <div className="grid grid-cols-4 gap-2 pt-3 mt-1 border-t border-[#1e293b]">
