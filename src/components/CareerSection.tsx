@@ -174,37 +174,6 @@ export default function CareerSection() {
           );
         })}
       </div>
-
-      {/* Verification Trace Log Terminal */}
-      <section className="mt-10 rounded-2xl bg-[#060911] border border-[#1e293b] p-6 sm:p-7 shadow-xl relative overflow-hidden">
-        <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
-          <div className="flex items-center gap-2 font-[JetBrains_Mono] text-[13px] text-indigo-400 font-bold">
-            <span className="material-symbols-outlined text-[18px]">terminal</span>
-            <span>{t("EXPERIENCE_TRACE_LOG.SH", "NHẬT_KÝ_KINH_NGHIỆM.SH")}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#1e293b]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#1e293b]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          </div>
-        </div>
-        <div className="font-[JetBrains_Mono] text-[12px] space-y-2 pt-4 text-[#94a3b8]">
-          {PORTFOLIO_DATA.traceLogs.map((log, i) => (
-            <div key={i} className="flex gap-2.5 items-center">
-              <span
-                className="font-bold px-1.5 py-0.5 rounded text-[10px]"
-                style={{
-                  backgroundColor: log.type === "AI" ? "rgba(99,102,241,0.15)" : log.type === "BACKEND" ? "rgba(56,189,248,0.15)" : "rgba(52,211,153,0.15)",
-                  color: log.type === "AI" ? "#818cf8" : log.type === "BACKEND" ? "#38bdf8" : "#34d399",
-                }}
-              >
-                [{log.type}]
-              </span>
-              <span className="text-[#cbd5e1]">{locale === "vi" && log.messageVi ? log.messageVi : log.message}</span>
-            </div>
-          ))}
-        </div>
-      </section>
     </section>
   );
 }
