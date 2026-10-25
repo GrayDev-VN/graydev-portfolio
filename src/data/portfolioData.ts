@@ -103,6 +103,7 @@ export const PORTFOLIO_DATA = {
     email: "ndtoan.work@gmail.com",
     github: "https://github.com/GrayDev-VN",
     linkedin: "https://www.linkedin.com/in/ndtoanwork/",
+    facebook: "https://www.facebook.com/ndtoanwork",
     university: "HCM-UTE",
     currentRole: "AI Developer @ SOFTWORLD",
     location: "Ho Chi Minh City, Vietnam",

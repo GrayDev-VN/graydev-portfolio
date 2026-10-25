@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Github, Linkedin } from "@/components/BrandIcons";
+import { Github, Linkedin, Facebook, Mail } from "@/components/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 
@@ -88,6 +88,22 @@ export default function Navbar({ activeSection }: NavbarProps) {
             >
               <Linkedin aria-hidden="true" size={17} />
             </a>
+            <a
+              href={PORTFOLIO_DATA.profile.facebook}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook Profile"
+              className="w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#1877F2] hover:border-blue-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Facebook aria-hidden="true" size={17} />
+            </a>
+            <a
+              href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+              aria-label="Email Contact"
+              className="w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Mail aria-hidden="true" size={17} />
+            </a>
           </div>
 
           <div className="h-4 w-px bg-[#1e293b] hidden sm:block mx-1" />
@@ -134,6 +150,44 @@ export default function Navbar({ activeSection }: NavbarProps) {
               {t(link.label, link.labelVi)}
             </Link>
           ))}
+
+          {/* Mobile Social Links */}
+          <div className="grid grid-cols-4 gap-2 pt-3 mt-1 border-t border-[#1e293b]">
+            <Link
+              href={PORTFOLIO_DATA.profile.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub Profile"
+              className="py-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white"
+            >
+              <Github size={17} />
+            </Link>
+            <a
+              href={PORTFOLIO_DATA.profile.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn Profile"
+              className="py-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white"
+            >
+              <Linkedin size={17} />
+            </a>
+            <a
+              href={PORTFOLIO_DATA.profile.facebook}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook Profile"
+              className="py-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#1877F2]"
+            >
+              <Facebook size={17} />
+            </a>
+            <a
+              href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+              aria-label="Email Contact"
+              className="py-2.5 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-emerald-400"
+            >
+              <Mail size={17} />
+            </a>
+          </div>
         </div>
       )}
     </header>

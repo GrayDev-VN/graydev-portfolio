@@ -15,6 +15,9 @@ import {
   PythonIcon,
   GitIcon,
   GithubIcon,
+  LinkedinIcon,
+  FacebookIcon,
+  MailIcon,
   TypeScriptIcon,
   PowerBIIcon,
 } from "@/components/BrandIcons";
@@ -270,6 +273,44 @@ export default function HeroSection() {
                   <span className="px-2.5 py-0.5 rounded-md bg-[#0a0f1d] border border-[#1e293b] text-[#cbd5e1] text-[10.5px]">
                     AI TA HCM-UTE
                   </span>
+                </div>
+
+                {/* Social Connect Cluster */}
+                <div className="flex items-center gap-2 mt-3.5">
+                  <a
+                    href={PORTFOLIO_DATA.profile.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="GitHub Profile"
+                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#152038] transition-all"
+                  >
+                    <GithubIcon size={15} />
+                  </a>
+                  <a
+                    href={PORTFOLIO_DATA.profile.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="LinkedIn Profile"
+                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#152038] transition-all"
+                  >
+                    <LinkedinIcon size={15} />
+                  </a>
+                  <a
+                    href={PORTFOLIO_DATA.profile.facebook}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Facebook Profile"
+                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#1877F2] hover:border-blue-500/50 hover:bg-[#152038] transition-all"
+                  >
+                    <FacebookIcon size={15} />
+                  </a>
+                  <a
+                    href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+                    aria-label="Email Contact"
+                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-[#152038] transition-all"
+                  >
+                    <MailIcon size={15} />
+                  </a>
                 </div>
               </div>
             </div>

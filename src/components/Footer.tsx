@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
+import { Github, Linkedin, Facebook, Mail } from "@/components/BrandIcons";
 
 export default function Footer() {
   const { t } = useLocale();
@@ -35,9 +36,47 @@ export default function Footer() {
           <Link href="/credentials#contact" className="hover:text-white transition-colors">{t("CONTACT", "LIÊN HỆ")}</Link>
         </div>
 
-        {/* Copyright */}
-        <div className="font-[JetBrains_Mono] text-[11px] text-[#64748b] text-center md:text-right">
-          © 2026 {PORTFOLIO_DATA.profile.name} ({PORTFOLIO_DATA.profile.realName}).
+        {/* Social Icons & Copyright */}
+        <div className="flex flex-col items-center md:items-end gap-3">
+          <div className="flex items-center gap-2">
+            <a
+              href={PORTFOLIO_DATA.profile.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub Profile"
+              className="w-8 h-8 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Github size={15} />
+            </a>
+            <a
+              href={PORTFOLIO_DATA.profile.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn Profile"
+              className="w-8 h-8 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Linkedin size={15} />
+            </a>
+            <a
+              href={PORTFOLIO_DATA.profile.facebook}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook Profile"
+              className="w-8 h-8 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#1877F2] hover:border-blue-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Facebook size={15} />
+            </a>
+            <a
+              href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+              aria-label="Email Contact"
+              className="w-8 h-8 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-[#141d30] transition-all"
+            >
+              <Mail size={15} />
+            </a>
+          </div>
+          <div className="font-[JetBrains_Mono] text-[11px] text-[#64748b] text-center md:text-right">
+            © 2026 {PORTFOLIO_DATA.profile.name} ({PORTFOLIO_DATA.profile.realName}).
+          </div>
         </div>
       </div>
     </footer>

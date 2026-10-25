@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Linkedin } from "@/components/BrandIcons";
+import { Linkedin, Facebook } from "@/components/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 
@@ -164,6 +164,27 @@ export default function ContactSection() {
                   <span className="font-[JetBrains_Mono] text-[10px] text-[#64748b] uppercase tracking-wider">LinkedIn</span>
                   <span className="font-[JetBrains_Mono] text-[13px] text-white font-semibold group-hover:text-indigo-300">
                     {t("CONNECT ON LINKEDIN", "KẾT NỐI TRÊN LINKEDIN")}
+                  </span>
+                </div>
+                <span className="material-symbols-outlined text-[18px] text-[#64748b] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ml-auto">
+                  open_in_new
+                </span>
+              </a>
+
+              {/* Facebook */}
+              <a
+                href={PORTFOLIO_DATA.profile.facebook}
+                target="_blank"
+                rel="noreferrer"
+                className="p-4 rounded-2xl bg-[#0c121f] border border-[#1e293b] hover:border-slate-600 flex items-center gap-3 transition-all group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#101827] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] group-hover:text-[#1877F2]">
+                  <Facebook aria-hidden="true" size={20} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-[JetBrains_Mono] text-[10px] text-[#64748b] uppercase tracking-wider">Facebook</span>
+                  <span className="font-[JetBrains_Mono] text-[13px] text-white font-semibold group-hover:text-blue-300">
+                    {t("CONNECT ON FACEBOOK", "KẾT NỐI TRÊN FACEBOOK")}
                   </span>
                 </div>
                 <span className="material-symbols-outlined text-[18px] text-[#64748b] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ml-auto">
