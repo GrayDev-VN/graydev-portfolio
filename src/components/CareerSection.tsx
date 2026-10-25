@@ -37,23 +37,6 @@ export default function CareerSection() {
         </p>
       </div>
 
-      {/* Telemetry Filter Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-2xl bg-[#0a0f1d] border border-[#1e293b] shadow-sm mb-10">
-        {[
-          { micro: t("AI DEVELOPMENT", "PHÁT TRIỂN AI"), val: "SOFTWORLD", sub: t("AI Developer", "Lập trình viên AI"), color: "text-emerald-400" },
-          { micro: t("CLOUD INFRA", "ĐIỆN TOÁN ĐÁM MÂY"), val: "AWS", sub: t("Cloud Intern", "Thực tập sinh Cloud"), color: "text-sky-400" },
-          { micro: t("AI EDUCATION", "GIÁO DỤC AI"), val: "HCM-UTE", sub: t("Teaching Assistant", "Trợ giảng"), color: "text-indigo-400" },
-        ].map((item, i) => (
-          <div key={i} className="flex flex-col p-4 rounded-xl bg-[#0e1629] border border-[#1e293b]">
-            <span className="font-[JetBrains_Mono] text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">{item.micro}</span>
-            <span className={`font-[Space_Grotesk] text-[20px] leading-[28px] font-bold ${item.color} mt-1 flex items-center gap-1.5`}>
-              {item.val}
-            </span>
-            <span className="font-[JetBrains_Mono] text-[11px] mt-0.5 text-[#94a3b8]">{item.sub}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Experience Cards */}
       <div className="flex flex-col space-y-8">
         {PORTFOLIO_DATA.career.map((role, idx) => {
