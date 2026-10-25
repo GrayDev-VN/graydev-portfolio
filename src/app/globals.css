@@ -64,7 +64,7 @@
 /* Clean standard ampersand fallback to fix Space Grotesk '&' glyph */
 @font-face {
   font-family: 'CleanAmpersand';
-  src: local('Segoe UI'), local('Inter'), local('Helvetica Neue'), local('Arial'), local('sans-serif');
+  src: local('Plus Jakarta Sans SemiBold'), local('Plus Jakarta Sans Bold'), local('Plus Jakarta Sans'), local('Inter'), local('Segoe UI'), local('Helvetica Neue'), local('Arial');
   unicode-range: U+0026;
   font-weight: 100 900;
 }

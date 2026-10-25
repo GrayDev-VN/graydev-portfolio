@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
+import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 export default function ProjectsSection() {
   const { locale, t } = useLocale();
@@ -36,7 +37,7 @@ export default function ProjectsSection() {
 
         <div className="max-w-4xl">
           <h2 className="font-[Space_Grotesk] text-[36px] leading-[44px] sm:text-[42px] sm:leading-[50px] font-bold tracking-tight text-white mb-3">
-            {t("Featured Engineering Work", "Dự án Nổi bật & Đang Phát triển")}
+            {formatWithAmpersand(t("Featured Engineering Work", "Dự án Nổi bật & Đang Phát triển"))}
           </h2>
           <p className="font-[Plus_Jakarta_Sans] text-[17px] leading-[28px] text-[#94a3b8]">
             {t(
@@ -181,7 +182,7 @@ export default function ProjectsSection() {
               </div>
 
               <h3 className="font-[Space_Grotesk] text-[24px] sm:text-[28px] leading-[34px] font-bold text-white tracking-tight mb-3">
-                {locale === "vi" ? featuredProject.titleVi ?? featuredProject.title : featuredProject.title}
+                {formatWithAmpersand(locale === "vi" ? featuredProject.titleVi ?? featuredProject.title : featuredProject.title)}
               </h3>
 
               <p className="font-[Plus_Jakarta_Sans] text-[15px] leading-[25px] text-[#94a3b8] mb-6">
@@ -241,7 +242,7 @@ export default function ProjectsSection() {
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-[JetBrains_Mono] text-[12px] uppercase tracking-wider text-[#818cf8] font-bold">
-              {t("MORE ACTIVE & RESEARCH PROJECTS", "CÁC DỰ ÁN NGHIÊN CỨU & ỨNG DỤNG KHÁC")}
+              {formatWithAmpersand(t("MORE ACTIVE & RESEARCH PROJECTS", "CÁC DỰ ÁN NGHIÊN CỨU & ỨNG DỤNG KHÁC"))}
             </span>
             <span className="px-2 py-0.5 rounded-full bg-[#182338] text-[11px] font-[JetBrains_Mono] text-[#94a3b8]">
               {otherProjects.length}
@@ -279,7 +280,7 @@ export default function ProjectsSection() {
 
                   {/* Title */}
                   <h3 className="font-[Space_Grotesk] text-[20px] font-bold text-white mb-2.5 group-hover:text-indigo-300 transition-colors">
-                    {locale === "vi" ? p.titleVi ?? p.title : p.title}
+                    {formatWithAmpersand(locale === "vi" ? p.titleVi ?? p.title : p.title)}
                   </h3>
 
                   {/* Summary */}

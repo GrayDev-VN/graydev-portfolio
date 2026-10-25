@@ -7,6 +7,7 @@ import { ArrowLeft, Clock3, Share2, Check, ArrowUp, ChevronDown, List, BookOpen 
 import { BlogPost } from "@/lib/blog";
 import { useLocale } from "@/components/LocaleProvider";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
+import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 interface TocItem {
   id: string;
@@ -199,7 +200,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
           </div>
 
           <h1 className="font-[Space_Grotesk] text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-white leading-[1.18]">
-            {title}
+            {formatWithAmpersand(title)}
           </h1>
 
           <p className="mt-5 text-base sm:text-xl leading-relaxed text-[#94a3b8] max-w-5xl font-[Plus_Jakarta_Sans]">
@@ -270,7 +271,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                         : "hover:text-white hover:bg-[#101827]"
                     }`}
                   >
-                    {item.text}
+                    {formatWithAmpersand(item.text)}
                   </a>
                 ))}
               </nav>
@@ -296,7 +297,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                           className="scroll-mt-28 mt-12 mb-4 font-[Space_Grotesk] text-2xl sm:text-3xl font-extrabold text-white border-b border-[#1e293b] pb-3 flex items-center justify-between group"
                           {...props}
                         >
-                          <span>{children}</span>
+                          <span>{formatWithAmpersand(children)}</span>
                           <a
                             href={`#${id}`}
                             onClick={(e) => handleJumpTo(e, id)}
@@ -319,7 +320,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                           className="scroll-mt-28 mt-8 mb-3 font-[Space_Grotesk] text-xl font-bold text-white flex items-center justify-between group"
                           {...props}
                         >
-                          <span>{children}</span>
+                          <span>{formatWithAmpersand(children)}</span>
                           <a
                             href={`#${id}`}
                             onClick={(e) => handleJumpTo(e, id)}
@@ -397,7 +398,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                             isActive ? "bg-indigo-400" : "bg-[#334155] group-hover:bg-[#64748b]"
                           }`}
                         />
-                        <span className="line-clamp-2 leading-relaxed">{item.text}</span>
+                        <span className="line-clamp-2 leading-relaxed">{formatWithAmpersand(item.text)}</span>
                       </a>
                     );
                   })}

@@ -4,6 +4,7 @@ import React from "react";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 import { getTechIcon } from "@/components/BrandIcons";
+import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 export default function CareerSection() {
   const { locale, t } = useLocale();
@@ -26,7 +27,7 @@ export default function CareerSection() {
           <span className="font-[JetBrains_Mono] text-[13px] text-[#64748b]">/ SYS_EXP_V4.2</span>
         </div>
         <h2 className="font-[Space_Grotesk] text-[36px] leading-[44px] lg:text-[52px] lg:leading-[60px] font-extrabold tracking-tight text-white">
-          {t("Work Experience & Track Record", "Kinh nghiệm làm việc & Vai trò chuyên môn")}
+          {formatWithAmpersand(t("Work Experience & Track Record", "Kinh nghiệm làm việc & Vai trò chuyên môn"))}
         </h2>
         <p className="font-[Plus_Jakarta_Sans] text-[17px] leading-[28px] text-[#94a3b8] max-w-3xl">
           {t(
@@ -76,7 +77,7 @@ export default function CareerSection() {
                     <span
                       className="px-3 py-1 rounded-md font-[JetBrains_Mono] text-[11px] uppercase tracking-wider font-bold bg-indigo-600 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]"
                     >
-                      {locale === "vi" ? role.categoryVi ?? role.category : role.category}
+                      {formatWithAmpersand(locale === "vi" ? role.categoryVi ?? role.category : role.category)}
                     </span>
                     <span
                       className="px-2.5 py-1 rounded-md font-[JetBrains_Mono] text-[11px] flex items-center gap-1 bg-[#0e1629] border border-[#1e293b] text-indigo-300"
@@ -93,7 +94,7 @@ export default function CareerSection() {
                     <div className="flex flex-col">
                       <span className={`font-[Plus_Jakarta_Sans] text-[18px] font-bold ${accent.icon}`}>{role.company}</span>
                       <span className="font-[Plus_Jakarta_Sans] text-[13px] text-[#94a3b8]">
-                        {locale === "vi" ? role.divisionVi ?? role.division : role.division}
+                        {formatWithAmpersand(locale === "vi" ? role.divisionVi ?? role.division : role.division)}
                       </span>
                     </div>
                   </div>
@@ -115,7 +116,7 @@ export default function CareerSection() {
                       {role.scope && (
                         <div className="flex items-center gap-2">
                           <span className={`material-symbols-outlined text-[16px] ${accent.icon}`}>tune</span>
-                          <span>{locale === "vi" ? role.scopeVi ?? role.scope : role.scope}</span>
+                          <span>{formatWithAmpersand(locale === "vi" ? role.scopeVi ?? role.scope : role.scope)}</span>
                         </div>
                       )}
                     </div>

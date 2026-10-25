@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight, Clock3, PenLine, Search, X } from "lucide-react";
 import { BlogPost } from "@/lib/blog";
 import { useLocale } from "@/components/LocaleProvider";
+import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
   const { locale, t } = useLocale();
@@ -60,10 +61,10 @@ export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
       <div className="mb-10 max-w-4xl">
         <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 font-[JetBrains_Mono] text-xs uppercase tracking-widest text-indigo-300">
           <PenLine size={14} aria-hidden="true" />
-          {t("ENGINEERING LOG & ROADMAPS", "GÓC GHI CHÉP & LỘ TRÌNH KỸ THUẬT")}
+          {formatWithAmpersand(t("ENGINEERING LOG & ROADMAPS", "GÓC GHI CHÉP & LỘ TRÌNH KỸ THUẬT"))}
         </span>
         <h1 className="font-[Space_Grotesk] text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
-          {t("Notes, Roadmaps & System Thinking", "Bài học, Lộ trình & Tư duy Hệ thống")}
+          {formatWithAmpersand(t("Notes, Roadmaps & System Thinking", "Bài học, Lộ trình & Tư duy Hệ thống"))}
         </h1>
         <p className="mt-4 text-base sm:text-lg leading-relaxed text-[#94a3b8]">
           {t(
@@ -179,7 +180,7 @@ export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
                 {/* Title */}
                 <h2 className="font-[Space_Grotesk] text-2xl font-bold text-white transition-colors group-hover:text-indigo-300">
                   <Link href={`/blog/${post.slug}`}>
-                    {locale === "vi" ? post.titleVi || post.title : post.title}
+                    {formatWithAmpersand(locale === "vi" ? post.titleVi || post.title : post.title)}
                   </Link>
                 </h2>
 

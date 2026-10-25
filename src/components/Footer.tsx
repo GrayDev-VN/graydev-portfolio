@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 import { Github, Linkedin, Facebook, Mail } from "@/components/BrandIcons";
+import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 export default function Footer() {
   const { t } = useLocale();
@@ -18,7 +19,7 @@ export default function Footer() {
             </span>
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
             <span className="font-[JetBrains_Mono] text-[11px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">
-              {t("AI & BACKEND", "AI & BACKEND")}
+              {formatWithAmpersand(t("AI & BACKEND", "AI & BACKEND"))}
             </span>
           </div>
           <p className="font-[Plus_Jakarta_Sans] text-[13px] leading-[20px] text-[#94a3b8]">
