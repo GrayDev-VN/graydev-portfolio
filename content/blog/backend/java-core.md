@@ -8,7 +8,7 @@ categoryVi: "Backend"
 publishedAt: "2026-10-26"
 readingTime: "5 min read"
 tags:
-  - Java Core
+  - Java Core, Backend
 contentVi: |
 ---
 
