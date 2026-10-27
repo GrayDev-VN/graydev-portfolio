@@ -55,7 +55,7 @@ export default function AiConsoleModal({ isOpen, onClose }: AiConsoleModalProps)
     const q = query.toLowerCase();
 
     if (q.includes("tóm tắt") || q.includes("kinh nghiệm") || q.includes("gray nguyen") || q.includes("thế mạnh")) {
-      return `### Hồ sơ & Kinh nghiệm của Gray Nguyen (Nguyên Đức Toàn):
+      return `### Hồ sơ & Kinh nghiệm của Gray Nguyen (Nguyễn Đức Toàn):
 - AI Teaching Assistant.
 - AWS Intern.
 - AI Developer tại SOFTWORLD.
@@ -74,11 +74,11 @@ Các mốc thời gian và mô tả công việc chi tiết chưa được cung 
     }
 
     if (q.includes("assistant") || q.includes("teaching") || q.includes("trợ giảng")) {
-      return "Gray Nguyen (Nguyên Đức Toàn) có kinh nghiệm làm AI Teaching Assistant. Thông tin về đơn vị và thời gian chưa được cung cấp.";
+      return "Gray Nguyen (Nguyễn Đức Toàn) có kinh nghiệm làm AI Teaching Assistant. Thông tin về đơn vị và thời gian chưa được cung cấp.";
     }
 
     if (q.includes("aws") || q.includes("softworld") || q.includes("developer")) {
-      return "Gray Nguyen (Nguyên Đức Toàn) từng làm AWS Intern và hiện có kinh nghiệm AI Developer tại SOFTWORLD. Thông tin chi tiết về nhiệm vụ và thời gian chưa được cung cấp.";
+      return "Gray Nguyen (Nguyễn Đức Toàn) từng làm AWS Intern và hiện có kinh nghiệm AI Developer tại SOFTWORLD. Thông tin chi tiết về nhiệm vụ và thời gian chưa được cung cấp.";
     }
 
     if (q.includes("spring boot") || q.includes("java") || q.includes("ai backend") || q.includes("kết hợp")) {
@@ -89,7 +89,7 @@ Các mốc thời gian và mô tả công việc chi tiết chưa được cung 
       return "Kinh nghiệm đã xác nhận của Gray Nguyen là AI Teaching Assistant, AWS Intern và AI Developer tại SOFTWORLD. Hiện chưa có thông tin về IT Audit.";
     }
 
-    return `Cảm ơn bạn đã hỏi! Kinh nghiệm đã xác nhận của Gray Nguyen (Nguyên Đức Toàn) gồm:
+    return `Cảm ơn bạn đã hỏi! Kinh nghiệm đã xác nhận của Gray Nguyen (Nguyễn Đức Toàn) gồm:
 1. **AI Teaching Assistant**
 2. **AWS Intern**
 3. **AI Developer tại SOFTWORLD**

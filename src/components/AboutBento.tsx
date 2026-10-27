@@ -33,7 +33,7 @@ export default function AboutBento() {
                     </div>
                     <span className="font-display font-bold text-sm text-white">Gray Nguyen</span>
                     <span className="font-mono-code text-[10px] text-[#a78bfa]">AI Developer</span>
-                    <span className="font-mono-code text-[9px] text-[#b5aec7] mt-1">Nguyên Đức Toàn</span>
+                    <span className="font-mono-code text-[9px] text-[#b5aec7] mt-1">Nguyễn Đức Toàn</span>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#080510] via-transparent to-transparent pointer-events-none"></div>
                 </div>
@@ -53,7 +53,7 @@ export default function AboutBento() {
                   Bringing artificial intelligence from learning and teaching into software development.
                 </h3>
                 <p className="text-sm sm:text-base text-[#b5aec7] leading-relaxed">
-                  Gray Nguyen (Nguyên Đức Toàn) has experience as an AI Teaching Assistant, an AWS Intern,
+                  Gray Nguyen (Nguyễn Đức Toàn) has experience as an AI Teaching Assistant, an AWS Intern,
                   and an AI Developer at <span className="text-white font-medium">SOFTWORLD</span>.
                 </p>
               </div>
