@@ -11,7 +11,7 @@ tags:
   - Java Core
   - Java
 contentVi: |
-  1. Why learn this?
+  # 1. Why learn this?
   - Know a solid order for learning Java Core — no skipping ahead.
   - Place yourself at beginner / junior / mid / senior for Core.
   - Understand which capability each knowledge cluster (OOP, Collections, concurrency, JVM…) unlocks in a real backend.
