@@ -50,7 +50,6 @@ export default function ContactSection() {
       const result = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(
-          result?.error ||
           t(
             "The message could not be sent. Please try again or email me directly.",
             "Chưa gửi được tin nhắn. Bạn thử lại hoặc gửi email trực tiếp giúp mình nhé.",
@@ -58,18 +57,14 @@ export default function ContactSection() {
         );
       }
 
-      form.reset();
-      setCharCount(0);
-      setSubmitted(true);
-
-      if (result.mailtoUrl) {
+      if (result.sent === true) {
+        form.reset();
+        setCharCount(0);
+        setSubmitted(true);
+      } else if (result.fallback === "mailto" && typeof result.mailtoUrl === "string" && result.mailtoUrl.startsWith("mailto:")) {
         setMailtoUrl(result.mailtoUrl);
-        // Automatically attempt to trigger mail client in a new window/tab
-        try {
-          window.open(result.mailtoUrl, "_blank");
-        } catch {
-          // Fallback handled by rendered button
-        }
+      } else {
+        throw new Error(t("The message could not be sent. Please email me directly.", "Ch?a g?i ???c tin nh?n. B?n h?y g?i email tr?c ti?p nh?."));
       }
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : t(
@@ -318,7 +313,7 @@ export default function ContactSection() {
                 <span>{isSubmitting ? t("Sending...", "Đang gửi...") : t("Send Message", "Gửi tin nhắn")}</span>
               </button>
 
-              {submitted && (
+              {(submitted || mailtoUrl) && (
                 <div role="status" className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-[#cbd5e1] font-[JetBrains_Mono] text-xs flex flex-col gap-3">
                   <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
                     <span className="material-symbols-outlined text-[20px]">check_circle</span>
@@ -327,7 +322,7 @@ export default function ContactSection() {
                   <p className="text-[#94a3b8] font-[Plus_Jakarta_Sans] text-xs leading-relaxed">
                     {mailtoUrl
                       ? t(
-                          "Your message has been pre-filled. You can click below to dispatch it directly to graynguyen.dev@gmail.com:",
+                          "This message has not been sent or stored. Your form is preserved. Open your email app below and send it there.",
                           "Lời nhắn đã được lưu vào hệ thống. Bạn có thể nhấn nút bên dưới để gửi trực tiếp tới graynguyen.dev@gmail.com:",
                         )
                       : t(

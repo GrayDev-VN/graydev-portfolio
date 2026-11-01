@@ -3,11 +3,11 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Clock3, PenLine, Search, X } from "lucide-react";
-import { BlogPost } from "@/lib/blog";
+import type { BlogPostSummary } from "@/features/blog/types";
 import { useLocale } from "@/components/LocaleProvider";
 import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
-export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
+export default function BlogIndex({ posts }: { posts: BlogPostSummary[] }) {
   const { locale, t } = useLocale();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -173,13 +173,13 @@ export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
                   <span>•</span>
                   <span className="inline-flex items-center gap-1 text-[#64748b]">
                     <Clock3 size={13} aria-hidden="true" />
-                    {post.readingTime}
+                    {locale === "vi" ? post.readingTimeVi : post.readingTime}
                   </span>
                 </div>
 
                 {/* Title */}
                 <h2 className="font-[Space_Grotesk] text-2xl font-bold text-white transition-colors group-hover:text-indigo-300">
-                  <Link href={`/blog/${post.slug}`}>
+                  <Link href={`/${locale}/blog/${post.slug}`}>
                     {formatWithAmpersand(locale === "vi" ? post.titleVi || post.title : post.title)}
                   </Link>
                 </h2>
@@ -207,7 +207,7 @@ export default function BlogIndex({ posts }: { posts: BlogPost[] }) {
 
                 {/* Read Link */}
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={`/${locale}/blog/${post.slug}`}
                   className="mt-5 inline-flex items-center gap-2 font-[JetBrains_Mono] text-xs font-bold text-indigo-400 transition-colors hover:text-white"
                 >
                   {t("Read full article", "Đọc toàn bộ bài viết")}

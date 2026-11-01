@@ -1,31 +1,12 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import PortfolioShell from "@/components/PortfolioShell";
-import BlogArticle from "@/components/BlogArticle";
-import { getBlogPost } from "@/lib/blog";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getBlogPost, getBlogPosts } from "@/lib/blog";
 
-interface BlogArticlePageProps {
-  params: Promise<{ slug: string }>;
+export async function generateStaticParams() {
+  return (await getBlogPosts()).map(({ slug }) => ({ slug }));
 }
-
-export async function generateMetadata({ params }: BlogArticlePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getBlogPost(slug);
-  if (!post) return { title: "Article not found | Gray Nguyen" };
-  return {
-    title: `${post.title} | Gray Nguyen`,
-    description: post.excerpt,
-  };
-}
-
-export default async function BlogArticlePage({ params }: BlogArticlePageProps) {
+export default async function ArticleRedirect({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getBlogPost(slug);
   if (!post) notFound();
-
-  return (
-    <PortfolioShell>
-      <BlogArticle post={post} />
-    </PortfolioShell>
-  );
+  permanentRedirect(`/${post.availableLocales.includes("en") ? "en" : "vi"}/blog/${post.slug}/`);
 }

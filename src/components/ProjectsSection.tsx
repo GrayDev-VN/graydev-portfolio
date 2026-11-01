@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 import { formatWithAmpersand } from "@/components/CleanAmpersand";
+import AccessibleDialog from "@/components/AccessibleDialog";
 
 export default function ProjectsSection() {
   const { locale, t } = useLocale();
@@ -108,8 +110,12 @@ export default function ProjectsSection() {
 
                   <div className="relative aspect-[16/9] w-full bg-white/95 overflow-hidden flex items-center justify-center p-2">
                     <img
-                      src="/banking-architecture.png"
+                      src="/banking-architecture.webp"
                       alt="AWS Cloud Banking Data Warehouse & Transaction Analytics Architecture"
+                      width={1024}
+                      height={597}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                     />
                     <div className="absolute inset-0 bg-indigo-950/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
@@ -226,7 +232,7 @@ export default function ProjectsSection() {
                 <span className="material-symbols-outlined text-[16px]">north_east</span>
               </a>
               <a
-                href="#contact"
+                href="/#contact"
                 className="py-3 px-4 rounded-lg bg-[#101827] hover:bg-[#182338] border border-[#1e293b] text-white font-[JetBrains_Mono] text-[13px] font-medium transition-all"
               >
                 {t("Discuss Architecture", "Trao đổi kỹ thuật")}
@@ -315,6 +321,7 @@ export default function ProjectsSection() {
                   </div>
 
                   {/* Action Link */}
+                  {p.id === "flowassist-chatbot" && <Link href="/projects/flowassist-chatbot" className="block mb-3 text-sm font-semibold text-indigo-300 hover:text-white">{t("Read case study", "Đọc case study")} →</Link>}
                   <a
                     href={p.githubUrl}
                     target="_blank"
@@ -332,20 +339,14 @@ export default function ProjectsSection() {
       </div>
 
       {/* Lightbox Fullscreen Architecture Modal */}
-      {isDiagramExpanded && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md transition-all"
-          onClick={() => setIsDiagramExpanded(false)}
-        >
+      <AccessibleDialog open={isDiagramExpanded} onClose={() => setIsDiagramExpanded(false)} labelledBy="architecture-dialog-title">
           <div
             className="relative max-w-6xl w-full max-h-[92vh] bg-[#0c121f] border border-[#1e293b] rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b border-[#1e293b]">
               <div>
-                <h4 className="font-[Space_Grotesk] text-lg sm:text-xl font-bold text-white">
+                <h4 id="architecture-dialog-title" className="font-[Space_Grotesk] text-lg sm:text-xl font-bold text-white">
                   {t(
                     "AWS Cloud Banking Data Warehouse & Transaction Analytics Architecture",
                     "Kiến trúc Kho Dữ liệu & Phân tích Giao dịch Ngân hàng trên AWS Cloud",
@@ -358,6 +359,7 @@ export default function ProjectsSection() {
               <button
                 type="button"
                 onClick={() => setIsDiagramExpanded(false)}
+                aria-label={t("Close architecture diagram", "Đóng sơ đồ kiến trúc")}
                 className="w-9 h-9 rounded-xl bg-[#101827] border border-[#1e293b] text-[#94a3b8] hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
@@ -368,12 +370,14 @@ export default function ProjectsSection() {
               <img
                 src="/banking-architecture.png"
                 alt="AWS Cloud Banking Data Warehouse Architecture"
+                    width={1024}
+                    height={597}
+                    decoding="async"
                 className="max-w-full max-h-[75vh] object-contain shadow-sm"
               />
             </div>
           </div>
-        </div>
-      )}
+      </AccessibleDialog>
     </section>
   );
 }

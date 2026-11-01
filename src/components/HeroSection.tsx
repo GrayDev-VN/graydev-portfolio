@@ -15,9 +15,6 @@ import {
   PythonIcon,
   GitIcon,
   GithubIcon,
-  LinkedinIcon,
-  FacebookIcon,
-  MailIcon,
   TypeScriptIcon,
   PowerBIIcon,
 } from "@/components/BrandIcons";
@@ -217,7 +214,7 @@ export default function HeroSection() {
                   <span>{t("Career Path", "Hành trình nghề nghiệp")}</span>
                 </Link>
                 <Link
-                  href="/blog"
+                  href={`/${locale}/blog`}
                   className="px-5 py-3 rounded-xl bg-[#0a0f1d] hover:bg-[#152038] border border-[#1e293b] text-[#cbd5e1] hover:text-white font-[JetBrains_Mono] text-[13px] font-semibold tracking-wide flex items-center gap-2 transition-all hover:-translate-y-0.5 shadow-sm"
                 >
                   <span className="material-symbols-outlined text-sky-400 text-[17px]">
@@ -238,7 +235,11 @@ export default function HeroSection() {
                 <div className="relative p-1.5 rounded-full bg-gradient-to-tr from-indigo-500 via-sky-400 to-indigo-600 shadow-[0_0_35px_rgba(99,102,241,0.35)] group-hover/avatar:shadow-[0_0_50px_rgba(99,102,241,0.55)] transition-all duration-500">
                   <div className="w-48 h-48 sm:w-56 sm:h-56 lg:w-60 lg:h-60 rounded-full overflow-hidden bg-[#070a13] border-4 border-[#070a13] relative">
                     <img
-                      src="/avatar.jpg"
+                      src="/avatar-480.webp"
+                      width={480}
+                      height={480}
+                      fetchPriority="high"
+                      decoding="async"
                       alt="Gray Nguyen (Nguyễn Đức Toàn) Profile"
                       className="w-full h-full object-cover object-top contrast-[1.04] transition-transform duration-500 group-hover/avatar:scale-105"
                     />
@@ -275,43 +276,27 @@ export default function HeroSection() {
                   </span>
                 </div>
 
-                {/* Social Connect Cluster */}
-                <div className="flex items-center gap-2 mt-3.5">
-                  <a
-                    href={PORTFOLIO_DATA.profile.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="GitHub Profile"
-                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#152038] transition-all"
-                  >
-                    <GithubIcon size={15} />
-                  </a>
-                  <a
-                    href={PORTFOLIO_DATA.profile.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="LinkedIn Profile"
-                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white hover:border-indigo-500/50 hover:bg-[#152038] transition-all"
-                  >
-                    <LinkedinIcon size={15} />
-                  </a>
-                  <a
-                    href={PORTFOLIO_DATA.profile.facebook}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Facebook Profile"
-                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#1877F2] hover:border-blue-500/50 hover:bg-[#152038] transition-all"
-                  >
-                    <FacebookIcon size={15} />
-                  </a>
-                  <a
-                    href={`mailto:${PORTFOLIO_DATA.profile.email}`}
-                    aria-label="Email Contact"
-                    className="w-8 h-8 rounded-lg bg-[#0a0f1d] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-[#152038] transition-all"
-                  >
-                    <MailIcon size={15} />
-                  </a>
-                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                <a
+                  href="/cv/Nguyen-Duc-Toan-CV.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-indigo-400/40 bg-indigo-500/10 px-4 py-2 text-sm font-semibold text-indigo-200 transition-colors hover:border-indigo-400 hover:bg-indigo-500/20 hover:text-white"
+                >
+                  <span className="material-symbols-outlined text-[18px]" aria-hidden="true">description</span>
+                  {t("View CV", "Xem CV")}
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  href="/cv/Nguyen-Duc-Toan-CV.pdf"
+                  download="Nguyen-Duc-Toan-CV.pdf"
+                  className="inline-flex min-h-11 items-center gap-1.5 px-2 text-xs font-medium text-slate-400 transition-colors hover:text-indigo-200"
+                >
+                  <span className="material-symbols-outlined text-[17px]" aria-hidden="true">download</span>
+                  {t("Download PDF", "Tải PDF")}
+                </a>
               </div>
             </div>
 

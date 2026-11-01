@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { writeFile, readFile } from "node:fs/promises";
-import path from "node:path";
+import { PORTFOLIO_DATA } from "@/data/portfolioData";
 
 export const runtime = "nodejs";
 
@@ -40,7 +39,23 @@ export async function POST(request: Request) {
 
   let payload: unknown;
   try {
-    payload = await request.json();
+    // Bound the actual stream too: Content-Length may be absent or inaccurate.
+    const reader = request.body?.getReader();
+    if (!reader) return NextResponse.json({ error: "invalid_submission" }, { status: 400 });
+    const decoder = new TextDecoder();
+    let text = "";
+    let bytes = 0;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > 16_384) {
+        await reader.cancel();
+        return NextResponse.json({ error: "payload_too_large" }, { status: 413 });
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    payload = JSON.parse(text + decoder.decode());
   } catch {
     return NextResponse.json({ error: "invalid_submission" }, { status: 400 });
   }
@@ -70,7 +85,7 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const recipient = process.env.CONTACT_TO_EMAIL || "graynguyen.dev@gmail.com";
+  const recipient = process.env.CONTACT_TO_EMAIL || PORTFOLIO_DATA.profile.email;
   const sender = process.env.CONTACT_FROM_EMAIL;
 
   const topicLabels: Record<string, string> = {
@@ -86,30 +101,6 @@ export async function POST(request: Request) {
   };
 
   const topicTitle = topicLabels[topic] || topic;
-
-  // Persist submission locally to inbox.json so messages in dev or local are never lost
-  try {
-    const inboxPath = path.join(process.cwd(), "src", "data", "inbox.json");
-    let messages: Array<Record<string, unknown>> = [];
-    try {
-      const raw = await readFile(inboxPath, "utf-8");
-      messages = JSON.parse(raw);
-    } catch {
-      messages = [];
-    }
-    messages.unshift({
-      id: `msg-${Date.now()}`,
-      name,
-      email,
-      topic: topicTitle,
-      message,
-      receivedAt: new Date().toISOString(),
-    });
-    await writeFile(inboxPath, JSON.stringify(messages.slice(0, 100), null, 2), "utf-8");
-    console.log(`[CONTACT INBOX] New message from ${name} (${email}): [${topicTitle}] ${message.slice(0, 60)}...`);
-  } catch (err) {
-    console.error("Could not write to local inbox.json:", err);
-  }
 
   // Generate mailto link for direct client email dispatch
   const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(
@@ -149,14 +140,14 @@ export async function POST(request: Request) {
         return NextResponse.json({ sent: true });
       }
       console.warn("Resend email dispatch failed, falling back to direct mailto.");
-    } catch (error) {
-      console.warn("Resend request error, falling back to direct mailto:", error);
+    } catch {
+      console.warn("Contact email provider unavailable.");
     }
   }
 
-  // Smooth fallback when Resend key is not yet set: message is saved locally and mailto URL is ready
+  // A prepared mailto link is not a sent or stored message.
   return NextResponse.json({
-    sent: true,
+    sent: false,
     fallback: "mailto",
     mailtoUrl,
   });

@@ -6,7 +6,7 @@ import { Github, Linkedin, Facebook, Mail } from "@/components/BrandIcons";
 import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
 export default function Footer() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
     <footer className="w-full bg-[#060911] border-t border-[#1e293b] relative z-10 py-12 mt-20">
@@ -32,7 +32,7 @@ export default function Footer() {
           <Link href="/" className="hover:text-white transition-colors">{t("ABOUT", "GIỚI THIỆU")}</Link>
           <Link href="/career" className="hover:text-white transition-colors">{t("CAREER", "SỰ NGHIỆP")}</Link>
           <Link href="/projects" className="hover:text-white transition-colors">{t("PROJECTS", "DỰ ÁN")}</Link>
-          <Link href="/blog" className="hover:text-white transition-colors">BLOG</Link>
+          <Link href={`/${locale}/blog`} className="hover:text-white transition-colors">BLOG</Link>
           <Link href="/credentials" className="hover:text-white transition-colors">{t("CREDENTIALS", "CHỨNG CHỈ")}</Link>
           <Link href="/credentials#contact" className="hover:text-white transition-colors">{t("CONTACT", "LIÊN HỆ")}</Link>
         </div>

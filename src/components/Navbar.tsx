@@ -25,6 +25,18 @@ export default function Navbar({ activeSection }: NavbarProps) {
   const { locale, toggleLocale, t } = useLocale();
 
   useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const dismiss = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+        document.getElementById("mobile-menu-toggle")?.focus();
+      }
+    };
+    window.addEventListener("keydown", dismiss);
+    return () => window.removeEventListener("keydown", dismiss);
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -54,7 +66,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
             return (
               <Link
                 key={link.label}
-                href={link.href}
+                href={link.section === "blog" ? `/${locale}/blog` : link.href}
                 className={`relative px-3.5 py-2 font-[JetBrains_Mono] text-[12px] tracking-wider uppercase transition-colors flex flex-col items-center justify-center group ${
                   isActive
                     ? "text-white font-bold"
@@ -129,6 +141,9 @@ export default function Navbar({ activeSection }: NavbarProps) {
           {/* Mobile toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            id="mobile-menu-toggle"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
             className="lg:hidden w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white cursor-pointer"
             aria-label="Toggle Menu"
           >
@@ -141,13 +156,13 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
+        <div id="mobile-navigation" className="lg:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
           {navLinks.map((link) => {
             const isActive = activeSection === link.section;
             return (
               <Link
                 key={link.label}
-                href={link.href}
+                href={link.section === "blog" ? `/${locale}/blog` : link.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-[JetBrains_Mono] font-semibold tracking-wider transition-colors border-b ${
                   isActive

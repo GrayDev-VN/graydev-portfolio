@@ -1,76 +1,35 @@
 "use client";
 
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Clock3, Share2, Check, ArrowUp, ChevronDown, List, BookOpen } from "lucide-react";
-import { BlogPost } from "@/lib/blog";
+import { ArrowLeft, Clock3, Share2, Check, ArrowUp, BookOpen } from "lucide-react";
+import TableOfContents from "@/features/blog/components/TableOfContents";
+import type { TocItem } from "@/features/blog/types";
+import { BLOG_SERIES, type BlogPostSummary } from "@/lib/blog-presentation";
 import { useLocale } from "@/components/LocaleProvider";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { formatWithAmpersand } from "@/components/CleanAmpersand";
 
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
+interface BlogArticleProps {
+  post: BlogPostSummary;
+  bodies: { en: React.ReactNode; vi: React.ReactNode };
+  tableOfContents: { en: TocItem[]; vi: TocItem[] };
+  related?: BlogPostSummary[];
 }
 
-function slugify(text: string): string {
-  return text
-    .toString()
-    .replace(/đ/g, "d")
-    .replace(/Đ/g, "d")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
-}
-
-function extractHeadings(markdown: string): TocItem[] {
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
-  const headings: TocItem[] = [];
-  let match;
-
-  while ((match = headingRegex.exec(markdown)) !== null) {
-    const level = match[1].length;
-    const rawText = match[2].trim();
-    const cleanText = rawText
-      .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
-      .replace(/[*_`#]/g, "")
-      .trim();
-
-    const id = slugify(cleanText) || `heading-${headings.length + 1}`;
-    headings.push({ id, text: cleanText, level });
-  }
-
-  return headings;
-}
-
-function getChildrenText(children: React.ReactNode): string {
-  if (!children) return "";
-  if (typeof children === "string" || typeof children === "number") return String(children);
-  if (Array.isArray(children)) return children.map(getChildrenText).join("");
-  if (React.isValidElement(children) && children.props) {
-    return getChildrenText((children.props as any).children);
-  }
-  return "";
-}
-
-export default function BlogArticle({ post }: { post: BlogPost }) {
+export default function BlogArticle({ post, bodies, tableOfContents, related = [] }: BlogArticleProps) {
   const { locale, t } = useLocale();
   const [activeId, setActiveId] = useState<string>("");
   const [copied, setCopied] = useState(false);
-  const [mobileTocOpen, setMobileTocOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const articleRef = useRef<HTMLElement>(null);
 
   const title = locale === "vi" ? post.titleVi || post.title : post.title;
   const excerpt = locale === "vi" ? post.excerptVi || post.excerpt : post.excerpt;
-  const content = locale === "vi" ? post.contentVi || post.content : post.content;
-
-  // Extract table of contents headings
-  const headings = useMemo(() => extractHeadings(content), [content]);
+  const headings = tableOfContents[locale];
+  const updatedAt = locale === "vi" ? post.updatedAtVi : post.updatedAt;
+  const series = BLOG_SERIES.find(item => (item.slugs as readonly string[]).includes(post.slug));
+  const seriesPosts = series ? series.slugs.map(slug => slug === post.slug ? post : related.find(item => item.slug === slug)).filter((item): item is BlogPostSummary => Boolean(item)) : [];
 
   // Smooth jump to section
   const handleJumpTo = useCallback((e: React.MouseEvent, id: string) => {
@@ -83,33 +42,34 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
       });
 
       window.history.pushState(null, "", `#${id}`);
       setActiveId(id);
-      setMobileTocOpen(false);
     }
   }, []);
 
-  // Track reading scroll progress & active heading
+  // Coalesce scroll events and resolve headings once per article/language.
   useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        const currentProgress = (window.scrollY / totalHeight) * 100;
-        setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+    const headingElements = headings
+      .map((heading) => ({ id: heading.id, element: document.getElementById(heading.id) }))
+      .filter((heading) => heading.element !== null);
+    let frame = 0;
+    const updateScroll = () => {
+      frame = 0;
+      const article = articleRef.current;
+      if (article) {
+        const bounds = article.getBoundingClientRect();
+        const readableHeight = Math.max(1, bounds.height - window.innerHeight + 96);
+        setScrollProgress(Math.round(Math.min(100, Math.max(0, ((96 - bounds.top) / readableHeight) * 100))));
       }
 
       if (headings.length === 0) return;
-      const headingElements = headings
-        .map((h) => ({ id: h.id, element: document.getElementById(h.id) }))
-        .filter((h) => h.element !== null);
-
       const scrollPosition = window.scrollY + 140;
       for (let i = headingElements.length - 1; i >= 0; i--) {
         const item = headingElements[i];
-        if (item.element && item.element.offsetTop <= scrollPosition) {
+        if (item.element && item.element.getBoundingClientRect().top + window.scrollY <= scrollPosition) {
           setActiveId(item.id);
           return;
         }
@@ -119,21 +79,32 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
       }
     };
 
+    const handleScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateScroll);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    updateScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [headings]);
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch { setCopied(false); }
     }
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   };
 
   return (
@@ -154,7 +125,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">
           <Link
-            href="/blog"
+            href={`/${locale}/blog`}
             className="inline-flex items-center gap-2 font-[JetBrains_Mono] text-xs font-semibold text-indigo-400 hover:text-white transition-colors group"
           >
             <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" aria-hidden="true" />
@@ -210,7 +181,7 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
           <div className="mt-8 flex flex-wrap items-center gap-4 sm:gap-6 border-t border-[#1e293b]/80 pt-6 font-[JetBrains_Mono] text-xs text-[#94a3b8]">
             <div className="flex items-center gap-2.5 text-white">
               <div className="w-6 h-6 rounded-full overflow-hidden bg-indigo-600/30 border border-indigo-400/50">
-                <img src="/avatar.jpg" alt="Gray Nguyen" className="w-full h-full object-cover" />
+                <img src="/avatar-96.webp" alt="Gray Nguyen" width={96} height={96} loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </div>
               <span className="font-semibold text-sm">Gray Nguyen</span>
             </div>
@@ -222,9 +193,10 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
               }).format(new Date(post.publishedAt))}
             </time>
             <span>•</span>
+            {updatedAt && updatedAt !== post.publishedAt && <span className="text-slate-400">{t("Updated", "Cập nhật")}: <time dateTime={updatedAt}>{new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US", { dateStyle: "long", timeZone: "UTC" }).format(new Date(updatedAt))}</time></span>}
             <span className="inline-flex items-center gap-1.5 text-indigo-300 font-semibold">
               <Clock3 size={14} aria-hidden="true" />
-              {post.readingTime}
+              {locale === "vi" ? post.readingTimeVi : post.readingTime}
             </span>
             {headings.length > 0 && (
               <>
@@ -238,111 +210,34 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
           </div>
         </header>
 
-        {/* Mobile Table of Contents Accordion (< lg) */}
-        {headings.length > 0 && (
-          <div className="lg:hidden mb-8 rounded-xl border border-[#1e293b] bg-[#0a0f1d] p-4 shadow-lg">
-            <button
-              onClick={() => setMobileTocOpen(!mobileTocOpen)}
-              className="w-full flex items-center justify-between font-[JetBrains_Mono] text-xs font-bold text-white uppercase tracking-wider"
-            >
-              <div className="flex items-center gap-2 text-indigo-400">
-                <List size={16} />
-                <span>
-                  {t("TABLE OF CONTENTS", "MỤC LỤC BÀI VIẾT")} ({headings.length})
-                </span>
-              </div>
-              <ChevronDown
-                size={16}
-                className={`text-[#94a3b8] transition-transform duration-200 ${mobileTocOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            {mobileTocOpen && (
-              <nav className="mt-4 pt-3 border-t border-[#1e293b] flex flex-col gap-2 max-h-80 overflow-y-auto">
-                {headings.map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    onClick={(e) => handleJumpTo(e, item.id)}
-                    className={`font-[JetBrains_Mono] text-xs py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
-                      item.level === 3 ? "pl-5 text-[#94a3b8]" : "text-[#cbd5e1] font-semibold"
-                    } ${
-                      activeId === item.id
-                        ? "bg-indigo-600/20 text-indigo-300 font-bold"
-                        : "hover:text-white hover:bg-[#101827]"
-                    }`}
-                  >
-                    {formatWithAmpersand(item.text)}
-                  </a>
-                ))}
-              </nav>
-            )}
-          </div>
+        {!post.availableLocales.includes(locale) && (
+          <p role="status" className="mb-6 text-sm text-slate-400">
+            {t("This article is currently available in Vietnamese only.", "Bài viết này hiện chỉ có bản tiếng Anh.")}
+          </p>
         )}
 
+        <TableOfContents
+          mobile
+          headings={headings}
+          activeId={activeId}
+          progress={scrollProgress}
+          onJump={handleJumpTo}
+          onBackToTop={scrollToTop}
+        />
+
         {/* 2-Column Responsive Layout: Content (Wider/Bigger) + Sticky Sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-10">
           {/* Main Article Content Column - Generous Width & Comfort */}
-          <main className="lg:col-span-8 xl:col-span-9 min-w-0">
+          <article ref={articleRef} lang={post.availableLocales.includes(locale) ? locale : post.availableLocales[0]} className="min-w-0">
             <div className="rounded-2xl border border-[#1e293b] bg-[#0a0f1d] p-6 sm:p-10 lg:p-12 xl:p-14 shadow-2xl">
-              <div className="space-y-6 text-[17px] sm:text-[18px] lg:text-[19px] leading-[32px] sm:leading-[36px] text-[#e2e8f0] font-[Plus_Jakarta_Sans] [&_a]:text-indigo-400 [&_a]:underline [&_a:hover]:text-white [&_p]:mb-6 [&_li]:ml-6 [&_li]:list-disc [&_ol>li]:list-decimal [&_pre]:overflow-x-auto [&_pre]:rounded-2xl [&_pre]:border [&_pre]:border-[#1e293b] [&_pre]:bg-[#060911] [&_pre]:p-5 sm:[&_pre]:p-6 [&_pre]:my-8 [&_pre]:text-[14px] sm:[&_pre]:text-[15px] [&_pre]:leading-[25px] [&_ul]:space-y-3 [&_code]:rounded-md [&_code]:bg-[#141d30] [&_code]:border [&_code]:border-[#1e293b] [&_code]:px-2 [&_code]:py-0.5 [&_code]:font-[JetBrains_Mono] [&_code]:text-[15px] [&_code]:text-indigo-300 [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-[#101827] [&_blockquote]:p-6 [&_blockquote]:my-8 [&_blockquote]:rounded-r-2xl [&_blockquote]:text-[18px] sm:[&_blockquote]:text-[19px] [&_blockquote]:leading-[32px] [&_blockquote]:italic [&_strong]:text-white [&_strong]:font-bold">
-                <ReactMarkdown
-                  components={{
-                    h2: ({ node, children, ...props }) => {
-                      const text = getChildrenText(children);
-                      const id = slugify(text) || "section";
-
-                      return (
-                        <h2
-                          id={id}
-                          className="scroll-mt-28 mt-12 mb-4 font-[Space_Grotesk] text-2xl sm:text-3xl font-extrabold text-white border-b border-[#1e293b] pb-3 flex items-center justify-between group"
-                          {...props}
-                        >
-                          <span>{formatWithAmpersand(children)}</span>
-                          <a
-                            href={`#${id}`}
-                            onClick={(e) => handleJumpTo(e, id)}
-                            className="opacity-0 group-hover:opacity-100 text-indigo-400 hover:text-white transition-opacity text-base font-[JetBrains_Mono] px-2 cursor-pointer"
-                            title="Anchor link"
-                            aria-label={`Link to ${text}`}
-                          >
-                            #
-                          </a>
-                        </h2>
-                      );
-                    },
-                    h3: ({ node, children, ...props }) => {
-                      const text = getChildrenText(children);
-                      const id = slugify(text) || "sub-section";
-
-                      return (
-                        <h3
-                          id={id}
-                          className="scroll-mt-28 mt-8 mb-3 font-[Space_Grotesk] text-xl font-bold text-white flex items-center justify-between group"
-                          {...props}
-                        >
-                          <span>{formatWithAmpersand(children)}</span>
-                          <a
-                            href={`#${id}`}
-                            onClick={(e) => handleJumpTo(e, id)}
-                            className="opacity-0 group-hover:opacity-100 text-indigo-400 hover:text-white transition-opacity text-sm font-[JetBrains_Mono] px-2 cursor-pointer"
-                            title="Anchor link"
-                            aria-label={`Link to ${text}`}
-                          >
-                            #
-                          </a>
-                        </h3>
-                      );
-                    },
-                  }}
-                >
-                  {content}
-                </ReactMarkdown>
+              <div className="blog-prose space-y-6 text-[17px] sm:text-[18px] lg:text-[19px] leading-[32px] sm:leading-[36px] text-[#e2e8f0] font-[Plus_Jakarta_Sans] [&_a]:text-indigo-400 [&_a]:underline [&_a:hover]:text-white [&_p]:mb-6 [&_li]:ml-6 [&_li]:list-disc [&_ol>li]:list-decimal [&_ul]:space-y-3 [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-[#101827] [&_blockquote]:p-6 [&_blockquote]:my-8 [&_blockquote]:rounded-r-2xl [&_blockquote]:text-[18px] sm:[&_blockquote]:text-[19px] [&_blockquote]:leading-[32px] [&_blockquote]:italic [&_strong]:text-white [&_strong]:font-bold">
+                {bodies[locale]}
               </div>
 
               {/* End of article footer */}
               <div className="mt-14 border-t border-[#1e293b] pt-8 flex flex-wrap items-center justify-between gap-4">
                 <Link
-                  href="/blog"
+                  href={`/${locale}/blog`}
                   className="inline-flex items-center gap-2 font-[JetBrains_Mono] text-xs font-semibold text-indigo-400 hover:text-white transition-colors"
                 >
                   <ArrowLeft size={14} aria-hidden="true" />
@@ -358,89 +253,29 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                 </button>
               </div>
             </div>
-          </main>
+          </article>
 
           {/* Sticky Table of Contents Sidebar (Desktop >= lg) */}
-          <aside className="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-24 self-start space-y-6">
-            {/* TOC Card */}
-            <div className="rounded-2xl border border-[#1e293b] bg-[#0a0f1d] p-6 shadow-2xl relative overflow-hidden">
-              <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#1e293b]">
-                <div className="flex items-center gap-2">
-                  <List size={16} className="text-indigo-400" />
-                  <span className="font-[JetBrains_Mono] text-xs font-bold text-white uppercase tracking-wider">
-                    {t("ON THIS PAGE", "MỤC LỤC BÀI VIẾT")}
-                  </span>
-                </div>
-                <span className="font-[JetBrains_Mono] text-[11px] text-[#64748b]">
-                  {headings.length} {t("topics", "phần")}
-                </span>
-              </div>
-
-              {headings.length > 0 ? (
-                <nav className="flex flex-col gap-1 max-h-[calc(100vh-22rem)] overflow-y-auto pr-2 custom-scrollbar">
-                  {headings.map((item) => {
-                    const isActive = activeId === item.id;
-                    return (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        onClick={(e) => handleJumpTo(e, item.id)}
-                        className={`group flex items-start gap-2.5 py-1.5 px-2.5 rounded-lg text-[13px] font-[JetBrains_Mono] transition-all cursor-pointer ${
-                          item.level === 3 ? "pl-6 text-[#94a3b8] text-xs" : "text-[#cbd5e1]"
-                        } ${
-                          isActive
-                            ? "bg-indigo-600/20 text-indigo-300 font-semibold shadow-sm border-l-2 border-indigo-400"
-                            : "hover:bg-[#101827] hover:text-white"
-                        }`}
-                      >
-                        <span
-                          className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 transition-colors ${
-                            isActive ? "bg-indigo-400" : "bg-[#334155] group-hover:bg-[#64748b]"
-                          }`}
-                        />
-                        <span className="line-clamp-2 leading-relaxed">{formatWithAmpersand(item.text)}</span>
-                      </a>
-                    );
-                  })}
-                </nav>
-              ) : (
-                <div className="text-xs font-[JetBrains_Mono] text-[#64748b]">
-                  {t("No headings found.", "Không có mục lục.")}
-                </div>
-              )}
-
-              {/* Quick Jump to top */}
-              <div className="mt-4 pt-3 border-t border-[#1e293b]/70 flex items-center justify-between text-xs font-[JetBrains_Mono]">
-                <button
-                  onClick={scrollToTop}
-                  className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <ArrowUp size={13} />
-                  <span>{t("Top of page", "Về đầu trang")}</span>
-                </button>
-                <button
-                  onClick={handleCopyLink}
-                  className="inline-flex items-center gap-1 text-[#94a3b8] hover:text-white transition-colors cursor-pointer"
-                >
-                  {copied ? (
-                    <span className="text-emerald-400">{t("Copied link!", "Đã chép!")}</span>
-                  ) : (
-                    <>
-                      <Share2 size={12} />
-                      <span>{t("Share link", "Sao chép link")}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
+          <aside className="sticky top-24 hidden min-w-0 self-start space-y-5 lg:block">
+            <TableOfContents
+              headings={headings}
+              activeId={activeId}
+              progress={scrollProgress}
+              onJump={handleJumpTo}
+              onBackToTop={scrollToTop}
+            />
 
             {/* Author Profile Card */}
             <div className="rounded-2xl border border-[#1e293b] bg-[#0a0f1d] p-5 shadow-xl">
               <div className="flex items-center gap-3.5 mb-3">
                 <div className="w-13 h-13 rounded-full overflow-hidden bg-[#101827] border-2 border-indigo-500/40 shrink-0 shadow-sm">
                   <img
-                    src="/avatar.jpg"
+                    src="/avatar-96.webp"
                     alt={PORTFOLIO_DATA.profile.name}
+                    width={96}
+                    height={96}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top"
                   />
                 </div>
@@ -471,6 +306,11 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
             </div>
           </aside>
         </div>
+        {series && <section className="mt-8 rounded-2xl border border-slate-800 bg-[#0a0f1d] p-6" aria-label={t("Article series", "Chuỗi bài viết")}>
+          <p className="text-indigo-400 text-xs font-mono mb-2">SERIES</p><h2 className="text-xl font-bold mb-4">{locale === "vi" ? series.titleVi : series.title}</h2>
+          <ol className="space-y-3">{seriesPosts.map((item, i) => <li key={item.slug}><Link href={`/${locale}/blog/${item.slug}`} aria-current={item.slug === post.slug ? "page" : undefined} className={item.slug === post.slug ? "text-indigo-300 font-semibold" : "text-slate-400 hover:text-white"}>{i + 1}. {locale === "vi" ? item.titleVi : item.title}{item.slug === post.slug ? t(" · Reading", " · Đang đọc") : " →"}</Link></li>)}</ol>
+        </section>}
+        {related.filter(item => item.slug !== post.slug).length > 0 && <section className="mt-8"><h2 className="text-xl font-bold mb-4">{t("Read next", "Đọc tiếp")}</h2><div className="grid sm:grid-cols-2 gap-4">{related.filter(item => item.slug !== post.slug).slice(0, 2).map(item => <Link key={item.slug} href={`/${locale}/blog/${item.slug}`} className="rounded-xl border border-slate-800 bg-[#0a0f1d] p-5 text-indigo-200 hover:border-indigo-500">{locale === "vi" ? item.titleVi : item.title} →</Link>)}</div></section>}
       </div>
     </div>
   );

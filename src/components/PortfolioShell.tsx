@@ -13,10 +13,10 @@ export default function PortfolioShell({ children }: PortfolioShellProps) {
   const pathname = usePathname();
   const [hash, setHash] = useState("");
 
-  const routePath = pathname.replace(/\/+$/, "") || "/";
+  const routePath = pathname.replace(/^\/(en|vi)(?=\/blog(?:\/|$))/, "").replace(/\/+$/, "") || "/";
   const [activeSection, setActiveSection] = useState<string>(() => {
     if (routePath === "/career") return "career";
-    if (routePath === "/projects") return "projects";
+    if (routePath.startsWith("/projects")) return "projects";
     if (routePath.startsWith("/blog")) return "blog";
     if (routePath === "/credentials") return "credentials";
     return "about";
@@ -45,7 +45,7 @@ export default function PortfolioShell({ children }: PortfolioShellProps) {
   useEffect(() => {
     if (routePath !== "/") {
       if (routePath === "/career") setActiveSection("career");
-      else if (routePath === "/projects") setActiveSection("projects");
+      else if (routePath.startsWith("/projects")) setActiveSection("projects");
       else if (routePath.startsWith("/blog")) setActiveSection("blog");
       else if (routePath === "/credentials") setActiveSection(hash === "#contact" ? "contact" : "credentials");
       else setActiveSection("about");
@@ -73,8 +73,9 @@ export default function PortfolioShell({ children }: PortfolioShellProps) {
   return (
     <div className="bg-[#070a13] text-[#f8fafc] min-h-screen relative flex flex-col selection:bg-indigo-600 selection:text-white">
       <div className="fixed inset-0 cyber-grid pointer-events-none z-0" />
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-indigo-600 focus:p-3 focus:text-white">Skip to content / Đến nội dung</a>
       <Navbar activeSection={activeSection} />
-      <main className="w-full pt-20 relative z-10 flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+      <main id="main-content" tabIndex={-1} className="w-full pt-20 relative z-10 flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         {children}
       </main>
       <Footer />

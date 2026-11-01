@@ -3,6 +3,7 @@ import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/goog
 import "./globals.css";
 import React from "react";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { siteOrigin } from "@/lib/site";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -23,6 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteOrigin() ? new URL(siteOrigin()!) : undefined,
   title: "Gray Nguyen | AI & Backend Engineer",
   description: "Gray Nguyen (Nguyễn Đức Toàn) — AI Developer at SOFTWORLD, AWS Intern, and AI Teaching Assistant.",
   keywords: ["Gray Nguyen", "Nguyễn Đức Toàn", "AI Developer", "Backend Engineer", "AI Teaching Assistant", "AWS Intern", "SOFTWORLD"],
