@@ -48,7 +48,15 @@ No database or in-site admin login is used. Only people with permission to merge
 
 LeetCode write-ups live in the existing blog. The first article is at /blog/two-pointers-two-sum-ii/, with English and Vietnamese Markdown in content/blog/two-pointers-two-sum-ii/. Use the LeetCode and Two Pointers tags to find it. Edit the same files to expand a solution and add a quoted updatedAt date. There is no separate account connection or activity dashboard.
 
-## Deploying
+## Project pages and videos
+
+Each project in `src/data/portfolioData.ts` has a detail page at `/projects/<id>`; FlowAssist keeps its existing case study. The project section links to the full collection without adding a navigation item.
+
+Add actual recordings to `PROJECT_VIDEOS` in `src/data/projectVideos.ts`, keyed by the project ID. Each entry needs a unique `id`, `title`, optional `titleVi`, and `kind` (`overview` or `tutorial`). For YouTube, set `provider: "youtube"` and `videoId` to the ID from the real video URL. For uploaded recordings, put the file in `public/videos/` and set `provider: "file"`, `src: "/videos/your-file.mp4"` (or `.webm`), and optional `poster`. File videos support `captions: [{ src: "/videos/your-file.vi.vtt", language: "vi", label: "Tiếng Việt" }]`.
+
+Videos do not autoplay. YouTube embeds load only after a visitor clicks. The video section and watch button remain hidden until a real recording is configured; no sample videos are published. Commit and redeploy after updating the configuration.
+
+## Hosting
 
 Import the GitHub repository into Vercel and add the Resend environment variables above. Vercel Hobby is generally free for personal, non-commercial projects; check Vercel's current plan terms for your use case. Vercel can automatically build and deploy each push, so GitHub Actions are optional (they can still run checks).
 

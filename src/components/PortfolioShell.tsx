@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import BinaryCursorBackground from "@/components/BinaryCursorBackground";
 
 interface PortfolioShellProps {
   children: React.ReactNode;
@@ -73,6 +74,7 @@ export default function PortfolioShell({ children }: PortfolioShellProps) {
   return (
     <div className="bg-[#070a13] text-[#f8fafc] min-h-screen relative flex flex-col selection:bg-indigo-600 selection:text-white">
       <div className="fixed inset-0 cyber-grid pointer-events-none z-0" />
+      <BinaryCursorBackground />
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-indigo-600 focus:p-3 focus:text-white">Skip to content / Đến nội dung</a>
       <Navbar activeSection={activeSection} />
       <main id="main-content" tabIndex={-1} className="w-full pt-20 relative z-10 flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">

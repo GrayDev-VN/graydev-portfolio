@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useLocale } from "@/components/LocaleProvider";
 import { formatWithAmpersand } from "@/components/CleanAmpersand";
 import AccessibleDialog from "@/components/AccessibleDialog";
+import ProjectActions from "./ProjectActions";
 
-export default function ProjectsSection() {
+export default function ProjectsSection({ fullPage = false }: { fullPage?: boolean }) {
   const { locale, t } = useLocale();
   const [isDiagramExpanded, setIsDiagramExpanded] = useState(false);
+  const Heading = fullPage ? "h1" : "h2";
 
   const featuredProject = PORTFOLIO_DATA.projects.find((p) => p.isFeatured) ?? PORTFOLIO_DATA.projects[0];
   const otherProjects = PORTFOLIO_DATA.projects.filter((p) => p.id !== featuredProject.id);
@@ -38,9 +39,9 @@ export default function ProjectsSection() {
         </div>
 
         <div className="max-w-4xl">
-          <h2 className="font-[Space_Grotesk] text-[36px] leading-[44px] sm:text-[42px] sm:leading-[50px] font-bold tracking-tight text-white mb-3">
+          <Heading className="font-[Space_Grotesk] text-[36px] leading-[44px] sm:text-[42px] sm:leading-[50px] font-bold tracking-tight text-white mb-3">
             {formatWithAmpersand(t("Featured Engineering Work", "Dự án Nổi bật & Đang Phát triển"))}
-          </h2>
+          </Heading>
           <p className="font-[Plus_Jakarta_Sans] text-[17px] leading-[28px] text-[#94a3b8]">
             {t(
               "Practical software engineering across fintech backends, clinical health systems, and applied AI applications.",
@@ -49,6 +50,7 @@ export default function ProjectsSection() {
           </p>
         </div>
       </div>
+
 
       {/* Featured Badge Divider */}
       <div className="mb-6 flex items-center gap-3">
@@ -221,22 +223,8 @@ export default function ProjectsSection() {
             </div>
 
             {/* Actions */}
-            <div className="pt-5 border-t border-[#1e293b] flex flex-wrap items-center gap-3">
-              <a
-                href={featuredProject.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 py-3 px-5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-[Space_Grotesk] text-[14px] font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(99,102,241,0.35)]"
-              >
-                <span>{t("View Source Code", "Xem mã nguồn")}</span>
-                <span className="material-symbols-outlined text-[16px]">north_east</span>
-              </a>
-              <a
-                href="/#contact"
-                className="py-3 px-4 rounded-lg bg-[#101827] hover:bg-[#182338] border border-[#1e293b] text-white font-[JetBrains_Mono] text-[13px] font-medium transition-all"
-              >
-                {t("Discuss Architecture", "Trao đổi kỹ thuật")}
-              </a>
+            <div className="pt-5 border-t border-[#1e293b]">
+              <ProjectActions project={featuredProject} />
             </div>
           </div>
 
@@ -320,17 +308,7 @@ export default function ProjectsSection() {
                     ))}
                   </div>
 
-                  {/* Action Link */}
-                  {p.id === "flowassist-chatbot" && <Link href="/projects/flowassist-chatbot" className="block mb-3 text-sm font-semibold text-indigo-300 hover:text-white">{t("Read case study", "Đọc case study")} →</Link>}
-                  <a
-                    href={p.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 font-[JetBrains_Mono] text-[12px] font-semibold text-[#818cf8] hover:text-white transition-colors"
-                  >
-                    <span>{t("Repository Details", "Chi tiết dự án")}</span>
-                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                  </a>
+                  <ProjectActions project={p} />
                 </div>
               </div>
             );
