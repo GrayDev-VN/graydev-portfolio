@@ -56,6 +56,18 @@ Add actual recordings to `PROJECT_VIDEOS` in `src/data/projectVideos.ts`, keyed 
 
 Videos do not autoplay. YouTube embeds load only after a visitor clicks. The video section and watch button remain hidden until a real recording is configured; no sample videos are published. Commit and redeploy after updating the configuration.
 
+## Backend & AI jobs
+
+Visit `/jobs/` from the Jobs navigation item. The board supports English/Vietnamese, keyword and skill search, career path, level, work arrangement and source filters. It only publishes active, explicitly classified early-career jobs in Ho Chi Minh City.
+
+The collection pipeline supports public employer APIs, authorized JSON feeds and HTML `JobPosting` extraction, with bounded discovery, retries and PostgreSQL persistence. **SmartRecruiters (Bosch Group) and Lever (ShopBack) are enabled through their documented public posting APIs.** The five original job-board sources remain disabled pending suitable access. Only jobs matching the HCM, career and early-career filters appear publicly; a successful source run can produce zero matches. See [live data verification](./docs/jobs-live-data.md), [source research](./docs/job-sources.md) and [collection setup](./docs/jobs-collection.md). CV upload and matching are not implemented.
+
+For local PostgreSQL development, run `npm run jobs:local:setup`, `npm run jobs:local:up`, `npm run jobs:db:migrate`, `npm run jobs:collect`, then `npm run dev`. Standard dev/start commands load private `.env.jobs.local` when it exists. `npm run jobs:local:activate` also enables database access for an already running Next.js dev server by updating only the job settings in `.env.local`; unrelated settings are preserved. `npm run test:jobs:live` verifies actual database jobs render on the local UI.
+
+The snapshot preview remains available with `JOBS_STORAGE=snapshot`. Operators can import a complete authorized snapshot with `npm run jobs:import -- <file.json>`; it replaces `data/jobs.json`, not PostgreSQL rows. See [docs/jobs.md](./docs/jobs.md) for the original snapshot schema.
+
+Run `npm test` for blog, normalization, PostgreSQL/PGlite, collector, HTML parser and pipeline tests; also run `npm run lint`, `npx tsc --noEmit` and a production build. `npm run test:jobs:postgres` additionally tests the real local PostgreSQL server in a temporary isolated schema. `npm run test:smoke` checks a running local production web server.
+
 ## Hosting
 
 Import the GitHub repository into Vercel and add the Resend environment variables above. Vercel Hobby is generally free for personal, non-commercial projects; check Vercel's current plan terms for your use case. Vercel can automatically build and deploy each push, so GitHub Actions are optional (they can still run checks).

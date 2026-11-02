@@ -15,6 +15,7 @@ const navLinks = [
   { label: "CAREER", labelVi: "SỰ NGHIỆP", href: "/#career", section: "career" },
   { label: "PROJECTS", labelVi: "DỰ ÁN", href: "/#projects", section: "projects" },
   { label: "BLOG", labelVi: "BLOG", href: "/blog", section: "blog" },
+  { label: "JOBS", labelVi: "VIỆC LÀM", href: "/jobs", section: "jobs" },
   { label: "CREDENTIALS", labelVi: "CHỨNG CHỈ", href: "/#credentials", section: "credentials" },
   { label: "CONTACT", labelVi: "LIÊN HỆ", href: "/#contact", section: "contact" },
 ];
@@ -60,7 +61,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#0c121f]/90 border border-[#1e293b] backdrop-blur-md">
+        <nav className="hidden xl:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#0c121f]/90 border border-[#1e293b] backdrop-blur-md">
           {navLinks.map((link) => {
             const isActive = activeSection === link.section;
             return (
@@ -144,7 +145,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
             id="mobile-menu-toggle"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
-            className="lg:hidden w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white cursor-pointer"
+            className="xl:hidden w-9 h-9 rounded-lg bg-[#0c121f] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-white cursor-pointer"
             aria-label="Toggle Menu"
           >
             <span className="material-symbols-outlined text-[20px]">
@@ -156,7 +157,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div id="mobile-navigation" className="lg:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
+        <div id="mobile-navigation" className="xl:hidden bg-[#080c15] border-b border-[#1e293b] px-6 py-5 flex flex-col gap-2">
           {navLinks.map((link) => {
             const isActive = activeSection === link.section;
             return (

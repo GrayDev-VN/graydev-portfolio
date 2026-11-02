@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -10,25 +10,28 @@ interface PortfolioShellProps {
   children: React.ReactNode;
 }
 
+function subscribeHash(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  window.addEventListener("popstate", onChange);
+  return () => {
+    window.removeEventListener("hashchange", onChange);
+    window.removeEventListener("popstate", onChange);
+  };
+}
+
 export default function PortfolioShell({ children }: PortfolioShellProps) {
   const pathname = usePathname();
-  const [hash, setHash] = useState("");
+  const hash = useSyncExternalStore(subscribeHash, () => window.location.hash, () => "");
 
   const routePath = pathname.replace(/^\/(en|vi)(?=\/blog(?:\/|$))/, "").replace(/\/+$/, "") || "/";
-  const [activeSection, setActiveSection] = useState<string>(() => {
-    if (routePath === "/career") return "career";
-    if (routePath.startsWith("/projects")) return "projects";
-    if (routePath.startsWith("/blog")) return "blog";
-    if (routePath === "/credentials") return "credentials";
-    return "about";
-  });
-
-  useEffect(() => {
-    const updateHash = () => setHash(window.location.hash);
-    updateHash();
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
-  }, [pathname]);
+  const [scrollSection, setActiveSection] = useState("about");
+  const activeSection = routePath === "/" ? scrollSection
+    : routePath === "/career" ? "career"
+    : routePath.startsWith("/projects") ? "projects"
+    : routePath.startsWith("/blog") ? "blog"
+    : routePath === "/jobs" ? "jobs"
+    : routePath === "/credentials" ? (hash === "#contact" ? "contact" : "credentials")
+    : "about";
 
   useEffect(() => {
     const targetId = hash.slice(1);
@@ -44,14 +47,7 @@ export default function PortfolioShell({ children }: PortfolioShellProps) {
 
   // Real-time scroll spy when on homepage
   useEffect(() => {
-    if (routePath !== "/") {
-      if (routePath === "/career") setActiveSection("career");
-      else if (routePath.startsWith("/projects")) setActiveSection("projects");
-      else if (routePath.startsWith("/blog")) setActiveSection("blog");
-      else if (routePath === "/credentials") setActiveSection(hash === "#contact" ? "contact" : "credentials");
-      else setActiveSection("about");
-      return;
-    }
+    if (routePath !== "/") return;
 
     const sectionIds = ["about", "career", "projects", "credentials", "contact"];
     const handleScroll = () => {

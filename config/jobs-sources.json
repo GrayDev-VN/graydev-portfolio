@@ -1,0 +1,23 @@
+[
+  { "name": "ITviec", "enabled": false },
+  { "name": "TopDev", "enabled": false },
+  { "name": "VietnamWorks", "enabled": false },
+  { "name": "TopCV", "enabled": false },
+  { "name": "LinkedIn", "enabled": false },
+  {
+    "name": "SmartRecruiters",
+    "enabled": true,
+    "mode": "smartrecruiters",
+    "companySlugs": ["BoschGroup"],
+    "allowedHosts": ["api.smartrecruiters.com"],
+    "permissionReference": "Public Posting API, published employer jobs only: https://developers.smartrecruiters.com/docs/posting-api and https://developers.smartrecruiters.com/docs/authentication"
+  },
+  {
+    "name": "Lever",
+    "enabled": true,
+    "mode": "lever",
+    "companySlugs": ["shopback-2"],
+    "allowedHosts": ["api.lever.co"],
+    "permissionReference": "Lever Postings API explicitly documents public published jobs and third-party scraping: https://github.com/lever/postings-api"
+  }
+]

@@ -1,0 +1,46 @@
+name: Collect authorized jobs
+
+on:
+  schedule:
+    # UTC: 00:17, 06:17, 12:17, 18:17 (Vietnam: 07:17, 13:17, 19:17, 01:17).
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jobs-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: ${{ vars.JOBS_COLLECTION_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      JOBS_STORAGE: postgres
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Require worker database configuration
+        env:
+          JOBS_DATABASE_URL: ${{ secrets.JOBS_DATABASE_URL }}
+        run: node -e "if (!process.env.JOBS_DATABASE_URL) { console.error('JOBS_DATABASE_URL is required.'); process.exit(1); }"
+      - name: Apply jobs database migrations
+        env:
+          JOBS_DATABASE_URL: ${{ secrets.JOBS_DATABASE_URL }}
+        run: npm run jobs:db:migrate
+      - name: Collect enabled authorized feeds
+        env:
+          JOBS_DATABASE_URL: ${{ secrets.JOBS_DATABASE_URL }}
+        run: npm run jobs:collect
